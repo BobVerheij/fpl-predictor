@@ -27,11 +27,26 @@ const Filter = ({
   const position = filterList.indexOf(value);
   // console.log(position);
 
+  interface dropProps {
+    name: string | number;
+    value: string | number;
+    pos: number;
+  }
+
+  const [, drop] = useDrop(() => ({
+    accept: "FILTER",
+    drop: (): dropProps => ({
+      name: name,
+      value: value,
+      pos: position,
+    }),
+  }));
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "FILTER",
     item: { name: name, value: value, pos: position },
     end: (item, monitor) => {
-      const res = monitor.getDropResult();
+      const res: dropProps = monitor.getDropResult();
       if (item && res) {
         console.log(`Dropped ${item.pos} to ${res.pos}`);
         const list = [...filterList.splice(res.pos, 0, item.value)];
@@ -41,15 +56,6 @@ const Filter = ({
     collect: (monitor) => ({
       value: value,
       isDragging: !!monitor.isDragging(),
-    }),
-  }));
-
-  const [, drop] = useDrop(() => ({
-    accept: "FILTER",
-    drop: () => ({
-      name: name,
-      value: value,
-      pos: position,
     }),
   }));
 

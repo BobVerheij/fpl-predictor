@@ -66,7 +66,7 @@ const GameWeekPage = () => {
     reloadLiveDetails();
   }, []);
 
-  const resetAllPlayerHistory = (value) => {
+  const resetAllPlayerHistory = () => {
     liveDetails.map((details, index) =>
       details.elements.map((player) => {
         let currentPlayer = bootstrap.elements.find(
@@ -86,7 +86,7 @@ const GameWeekPage = () => {
   const gameWeekChange = async (value: number) => {
     setCurrent(value);
     console.log("gameweek changed to " + value);
-    resetAllPlayerHistory(value);
+    resetAllPlayerHistory();
   };
 
   return (
@@ -121,55 +121,18 @@ const GameWeekPage = () => {
                   ldPlayer.stats.total_points !== 0
               ) && positionFilter.includes(element.element_type)
           )
-          .sort(
-            (a, b) =>
-              (sort.includes("total_points") &&
-                liveDetails?.[current - 1]?.elements[b.id - 1]?.stats
-                  .total_points -
-                  liveDetails?.[current - 1]?.elements[a.id - 1]?.stats
-                    .total_points) ||
-              (sort.includes("bps") &&
-                liveDetails?.[current - 1]?.elements[b.id - 1]?.stats.bps -
-                  liveDetails?.[current - 1]?.elements[a.id - 1]?.stats.bps) ||
-              (sort.includes("bonus") &&
-                liveDetails?.[current - 1]?.elements[b.id - 1]?.stats.bonus -
-                  liveDetails?.[current - 1]?.elements[a.id - 1]?.stats
-                    .bonus) ||
-              (sort.includes("creativity") &&
+          .sort((a, b) => {
+            const sortArray = [...sort].map(
+              (s) =>
                 parseInt(
-                  liveDetails?.[current - 1]?.elements[b.id - 1]?.stats
-                    .creativity
+                  liveDetails?.[current - 1]?.elements[b.id - 1]?.stats[s]
                 ) -
-                  parseInt(
-                    liveDetails?.[current - 1]?.elements[a.id - 1]?.stats
-                      .creativity
-                  )) ||
-              (sort.includes("influence") &&
                 parseInt(
-                  liveDetails?.[current - 1]?.elements[b.id - 1]?.stats
-                    .influence
-                ) -
-                  parseInt(
-                    liveDetails?.[current - 1]?.elements[a.id - 1]?.stats
-                      .influence
-                  )) ||
-              (sort.includes("threat") &&
-                parseInt(
-                  liveDetails?.[current - 1]?.elements[b.id - 1]?.stats.threat
-                ) -
-                  parseInt(
-                    liveDetails?.[current - 1]?.elements[a.id - 1]?.stats.threat
-                  )) ||
-              (sort.includes("ict_index") &&
-                parseInt(
-                  liveDetails?.[current - 1]?.elements[b.id - 1]?.stats
-                    .ict_index
-                ) -
-                  parseInt(
-                    liveDetails?.[current - 1]?.elements[a.id - 1]?.stats
-                      .ict_index
-                  ))
-          )
+                  liveDetails?.[current - 1]?.elements[a.id - 1]?.stats[s]
+                )
+            );
+            return sortArray.find((s) => s !== 0);
+          })
           .slice(0, 20)
           .map((player, index) => (
             <Player

@@ -33,7 +33,6 @@ const Player = ({ hasPhoto, imageSide, playerID, sizing }: PlayerProps) => {
   const playerHistoryExplained = player?.history[current - 1].explain;
 
   const changeSize = () => {
-    console.log("change");
     if (size === "S") {
       setSize("M");
     } else {

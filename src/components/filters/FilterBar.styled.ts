@@ -50,8 +50,6 @@ export const Filter = styled.a<{ selected?: boolean }>`
     props.selected &&
     "margin: 4px 0; border-radius: 0; border-right: 2px solid var(--primary);"};
 
-	
-
   :hover {
     opacity: 0.8;
   }

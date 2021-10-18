@@ -6,7 +6,7 @@ import * as Styled from "./FilterBar.styled";
 
 interface FilterProps {
   isDraggable?: boolean;
-  filterList: any[];
+  filterList?: any[];
   handleClick: (value: string | number) => void;
   value?: string | number;
   name?: string;
@@ -20,17 +20,15 @@ const Filter = ({
   name,
 }: FilterProps) => {
   const draggingIsHappening = useStore((state) => state.draggingIsHappening);
+  const setSort = useStore((state) => state.setSort);
+  const sort = useStore((state) => state.sort);
   const setDraggingIsHappening = useStore(
     (state) => state.setDraggingIsHappening
   );
 
-  const position = filterList.indexOf(value);
-  // console.log(position);
-
   interface dropProps {
     name: string | number;
     value: string | number;
-    pos: number;
   }
 
   const [, drop] = useDrop(() => ({
@@ -38,20 +36,14 @@ const Filter = ({
     drop: (): dropProps => ({
       name: name,
       value: value,
-      pos: position,
     }),
   }));
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "FILTER",
-    item: { name: name, value: value, pos: position },
+    item: { name, value },
     end: (item, monitor) => {
       const res: dropProps = monitor.getDropResult();
-      if (item && res) {
-        console.log(`Dropped ${item.pos} to ${res.pos}`);
-        const list = [...filterList.splice(res.pos, 0, item.value)];
-        console.log(list);
-      }
     },
     collect: (monitor) => ({
       value: value,
@@ -63,11 +55,19 @@ const Filter = ({
     setDraggingIsHappening(isDragging);
   }, [isDragging]);
 
-  const canBeDragged = filterList.includes(value) && isDraggable;
+  const dragOrDrop = () => {
+    if (isDraggable && filterList.includes(value)) {
+      if (draggingIsHappening) {
+        return drop;
+      }
+      return drag;
+    }
+    return null;
+  };
 
   return (
     <Styled.Filter
-      ref={canBeDragged && draggingIsHappening ? drop : drag}
+      ref={dragOrDrop()}
       style={{
         display: isDragging && "none",
         borderRight:

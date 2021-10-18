@@ -1,0 +1,36 @@
+{
+  "name": "fpl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fetch": "^1.1.0",
+    "fpl-api": "^3.0.4",
+    "next": "^11.1.2",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.2",
+    "react-dnd": "^14.0.4",
+    "react-dnd-html5-backend": "^14.0.2",
+    "react-dom": "^17.0.2",
+    "react-lottie-segments": "^1.4.9",
+    "react-spinners": "^0.11.0",
+    "styled-components": "^5.3.1",
+    "zustand": "^3.5.13"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^5.5.0",
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.10.3",
+    "@types/react": "^17.0.27",
+    "@types/react-dom": "^17.0.9",
+    "@types/styled-components": "^5.1.15",
+    "typescript": "^4.4.3"
+  }
+}

@@ -1,16 +1,13 @@
-import { fetchBootstrap, fetchLive } from "fpl-api";
-import Player from "../src/components/player/Player";
-import Lottie from "react-lottie-segments";
-import * as ball from "../public/animations/fpl-ball.json";
-
-import React, { useEffect, useState } from "react";
-
+import { Bootstrap, fetchBootstrap, fetchLive } from "fpl-api";
 import { useStore } from "../src/stores/ZustandStore";
-
-import NavBar from "../src/components/navigation/NavBar";
+import * as ball from "../public/animations/fpl-ball.json";
 import FilterBar from "../src/components/filters/FilterBar";
+import Lottie from "react-lottie-segments";
+import NavBar from "../src/components/navigation/NavBar";
+import Player from "../src/components/player/Player";
+import React, { useEffect, useState } from "react";
 import SortBar from "../src/components/filters/SortBar";
-import { element } from "prop-types";
+import Stat from "../src/components/stats/Stat";
 
 const GameWeekPage = () => {
   const bootstrap = useStore((state) => state.bootstrap);
@@ -70,8 +67,16 @@ const GameWeekPage = () => {
   }, []);
 
   const resetAllPlayerHistory = () => {
-    liveDetails.map((details, index) =>
-      details.elements.map((player) => {
+    liveDetails.map((details, index) => {
+      const highest = {
+        minutes: details.elements.sort(
+          (a, b) => b.stats.minutes - a.stats.minutes
+        )?.[0]?.stats.minutes,
+        total_points: details.elements.sort(
+          (a, b) => b.stats.total_points - a.stats.total_points
+        )?.[0]?.stats.total_points,
+      };
+      return details.elements.map((player) => {
         let currentPlayer = bootstrap.elements.find(
           (element) => element.id === player.id
         );
@@ -81,9 +86,10 @@ const GameWeekPage = () => {
           stats: player.stats,
           explain: player.explain,
           gameweek: index,
+          highest: highest,
         };
-      })
-    );
+      });
+    });
   };
 
   const gameWeekChange = async (value: number) => {
@@ -100,7 +106,7 @@ const GameWeekPage = () => {
     }
   }, [sort]);
 
-  const calcLength = 4;
+  const calcRange = [1, current];
 
   return (
     <>
@@ -125,7 +131,7 @@ const GameWeekPage = () => {
           flexFlow: "row wrap",
         }}
       >
-        {bootstrap?.elements
+        {/* {bootstrap?.elements
           .filter(
             (element) =>
               liveDetails?.[current - 1]?.elements.find(
@@ -155,57 +161,54 @@ const GameWeekPage = () => {
               playerID={player.id}
               sizing={index + 1}
             ></Player>
-          ))}
+          ))} */}
 
-        <p>{`From GW ${current - calcLength} to GW ${current}`}</p>
+        <p>{`From GW ${calcRange[0]} to GW ${calcRange[1]}`}</p>
 
         {bootstrap?.elements
           ?.filter((element) => positionFilter.includes(element.element_type))
           .sort(
             (a, b) =>
-              b.history
-                ?.filter((history) => history.gameweek >= current - calcLength)
-                .reduce((acc, history) => {
-                  return (
-                    acc +
-                    (typeof history.stats[sortStats[1]] === "string"
-                      ? Math.floor(parseInt(history.stats[sortStats[1]]))
-                      : history.stats[sortStats[1]])
-                  );
-                }, 0) -
-              a.history
-                ?.filter((history) => history.gameweek >= current - calcLength)
-                .reduce((acc, history) => {
-                  return (
-                    acc +
-                    (typeof history.stats[sortStats[1]] === "string"
-                      ? Math.floor(parseInt(history.stats[sortStats[1]]))
-                      : history.stats[sortStats[1]])
-                  );
-                }, 0)
-          )
-          .sort(
-            (a, b) =>
               sortStats[0] !== null &&
               b.history
-                ?.filter((history) => history.gameweek > current - calcLength)
+                ?.filter((history) => history.gameweek >= calcRange[0])
                 .reduce((acc, history) => {
                   return (
                     acc +
                     (typeof history.stats[sortStats[0]] === "string"
                       ? Math.floor(parseInt(history.stats[sortStats[0]]))
-                      : history.stats[sortStats[0]])
+                      : history.stats[sortStats[0]]) /
+                      (typeof history.stats[sortStats[1]] === "string"
+                        ? Math.floor(parseInt(history.stats[sortStats[0]]))
+                        : history.stats[sortStats[1]])
                   );
                 }, 0) -
                 a.history
-                  ?.filter((history) => history.gameweek > current - calcLength)
+                  ?.filter((history) => history.gameweek >= calcRange[0])
                   .reduce((acc, history) => {
                     return (
                       acc +
                       (typeof history.stats[sortStats[0]] === "string"
                         ? Math.floor(parseInt(history.stats[sortStats[0]]))
-                        : history.stats[sortStats[0]])
+                        : history.stats[sortStats[0]]) /
+                        (typeof history.stats[sortStats[1]] === "string"
+                          ? Math.floor(parseInt(history.stats[sortStats[0]]))
+                          : history.stats[sortStats[1]])
                     );
+                  }, 0)
+          )
+          .sort(
+            (a, b) =>
+              sortStats[0] !== null &&
+              b.history
+                ?.filter((history) => history.gameweek >= calcRange[0])
+                .reduce((acc, history) => {
+                  return acc + history.stats[sortStats[0]];
+                }, 0) -
+                a.history
+                  ?.filter((history) => history.gameweek >= calcRange[0])
+                  .reduce((acc, history) => {
+                    return acc + history.stats[sortStats[0]];
                   }, 0)
           )
           .slice(0, 20)
@@ -231,9 +234,7 @@ const GameWeekPage = () => {
                   <p>
                     {sortStats[0].split("_").join(" ")}{" "}
                     {element.history
-                      ?.filter(
-                        (history) => history.gameweek >= current - calcLength
-                      )
+                      ?.filter((history) => history.gameweek >= calcRange[0])
                       .reduce((acc, history) => {
                         return (
                           acc +
@@ -247,9 +248,7 @@ const GameWeekPage = () => {
                 <p>
                   {sortStats[1].split("_").join(" ")}{" "}
                   {element.history
-                    ?.filter(
-                      (history) => history.gameweek >= current - calcLength
-                    )
+                    ?.filter((history) => history.gameweek >= calcRange[0])
                     .reduce((acc, history) => {
                       return (
                         acc +
@@ -266,9 +265,7 @@ const GameWeekPage = () => {
                     {sortStats[0].split("_").join(" ")}{" "}
                     {(
                       element.history
-                        ?.filter(
-                          (history) => history.gameweek >= current - calcLength
-                        )
+                        ?.filter((history) => history.gameweek >= calcRange[0])
                         .reduce((acc, history) => {
                           return (
                             acc +
@@ -278,9 +275,7 @@ const GameWeekPage = () => {
                           );
                         }, 0) /
                       element.history
-                        ?.filter(
-                          (history) => history.gameweek >= current - calcLength
-                        )
+                        ?.filter((history) => history.gameweek >= calcRange[0])
                         .reduce((acc, history) => {
                           return (
                             acc +
@@ -337,7 +332,7 @@ const GameWeekPage = () => {
                       element?.history?.find((history) => history?.id > 0)
                         .gameweek * 40
                     }px`,
-                    background: "grey",
+                    background: "var(--primary)",
                   }}
                 ></div>
 
@@ -351,16 +346,16 @@ const GameWeekPage = () => {
                           flexFlow: "column",
                           justifyContent: "space-around",
                           alignItems: "center",
-                          minWidth: "40px",
-                          border: "1px solid grey",
+
+                          border: "1px solid var(--primary)",
                           borderLeft:
-                            history.gameweek === current - calcLength
+                            history.gameweek === calcRange[0] - 1
                               ? "3px solid rgba(255, 105, 180, 1)"
-                              : "1px solid grey",
+                              : "1px solid var(--primary)",
                           borderRight:
                             history.gameweek === current - 1
                               ? "3px solid rgba(255, 105, 180, 1)"
-                              : "1px solid grey",
+                              : "1px solid var(--primary)",
                           background:
                             history.gameweek % 2 === 0
                               ? "rgba(255, 105, 180, .3)"
@@ -369,8 +364,14 @@ const GameWeekPage = () => {
                         key={element.id + "_" + history.gameweek}
                       >
                         <p>{history.gameweek + 1}</p>
-                        <p>{history.stats.minutes}</p>
-                        <p>{history.stats.total_points}</p>
+                        <Stat
+                          value={history.stats.minutes}
+                          highest={history.highest?.minutes}
+                        ></Stat>
+                        <Stat
+                          value={history.stats.total_points}
+                          highest={history.highest?.total_points}
+                        ></Stat>
                         <p>{history.stats.bonus}</p>
                         <p>{history.stats.bps}</p>
                         <p>{history.stats.goals_scored}</p>
@@ -390,16 +391,16 @@ const GameWeekPage = () => {
                           justifyContent: "space-around",
                           alignItems: "center",
                           minWidth: "40px",
-                          border: "1px solid grey",
-                          background: "grey",
+                          border: "1px solid var(--primary)",
+                          background: "var(--primary)",
                           borderLeft:
-                            history.gameweek === current - calcLength
+                            history.gameweek === calcRange[0] - 1
                               ? "3px solid rgba(255, 105, 180, 1)"
-                              : "1px solid grey",
+                              : "1px solid var(--primary)",
                           borderRight:
                             history.gameweek === current - 1
                               ? "3px solid rgba(255, 105, 180, 1)"
-                              : "1px solid grey",
+                              : "1px solid var(--primary)",
                         }}
                       ></div>
                     )

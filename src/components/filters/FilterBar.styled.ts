@@ -12,8 +12,8 @@ export const FilterBar = styled.div`
     text-transform: uppercase;
 
     text-align: end;
-    font-size: 0.8rem;
-    padding: 8px 12px;
+    font-size: 0.6rem;
+    padding: 6px 10px;
     line-height: 9px;
     border-radius: 100px 0 0 100px;
 
@@ -31,8 +31,8 @@ export const Filter = styled.a<{ selected?: boolean }>`
   text-transform: uppercase;
   font-weight: 900;
   text-align: left;
-  font-size: 0.8rem;
-  padding: 8px 12px;
+  font-size: 0.6rem;
+  padding: 6px 10px;
   line-height: 9px;
   border-radius: 100px;
 

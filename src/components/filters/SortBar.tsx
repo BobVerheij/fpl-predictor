@@ -26,6 +26,12 @@ const SortBar = () => {
         isDraggable
         filterList={sort}
         handleClick={handleClick}
+        value={"minutes"}
+      ></Filter>
+      <Filter
+        isDraggable
+        filterList={sort}
+        handleClick={handleClick}
         name={"total points"}
         value={"total_points"}
       ></Filter>

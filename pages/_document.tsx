@@ -3,6 +3,7 @@ import React from "react";
 import Document from "next/document";
 import Head from "next/head";
 import { ServerStyleSheet } from "styled-components";
+import NavBar from "../src/components/navigation/NavBar";
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {

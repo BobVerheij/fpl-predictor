@@ -50,7 +50,7 @@ const Player = ({ hasPhoto, imageSide, playerID, sizing }: PlayerProps) => {
     >
       {size !== "S" && (
         <Styled.ScoreInfo imageSide={imageSide}>
-          {playerHistoryExplained[0].stats
+          {playerHistoryExplained?.[0].stats
             .filter((stat) => stat.value !== 0)
             .map((stat) => (
               <Styled.Score
@@ -71,7 +71,7 @@ const Player = ({ hasPhoto, imageSide, playerID, sizing }: PlayerProps) => {
               </Styled.Score>
             ))}
           {ictList.map((i) =>
-            Math.floor(parseInt(playerHistory[i])) ? (
+            Math.floor(parseInt(playerHistory?.[i])) ? (
               <Styled.Score
                 key={`${player.id} ${i}`}
                 colorOption={"rgb(137, 44, 226)"}
@@ -88,10 +88,10 @@ const Player = ({ hasPhoto, imageSide, playerID, sizing }: PlayerProps) => {
         <Styled.Name>{`${player?.web_name}`}</Styled.Name>
 
         <Styled.TotalPoints>
-          {playerHistory.in_dreamteam && (
+          {playerHistory?.in_dreamteam && (
             <Styled.SVG url={"images/star.svg"}></Styled.SVG>
           )}
-          <p>{playerHistory.total_points}</p>
+          <p>{playerHistory?.total_points}</p>
         </Styled.TotalPoints>
         <Styled.SVG
           url={size === "S" ? "images/arrow-down.svg" : "images/arrow-up.svg"}

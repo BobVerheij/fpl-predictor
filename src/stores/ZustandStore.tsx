@@ -22,6 +22,10 @@ interface State {
   bootstrap: NewBootstrap;
   isLoading: boolean;
   liveDetails: Live[];
+  mainColor: string;
+  setMainColor: (input: string) => void;
+  secondaryColor: string;
+  setSecondaryColor: (input: string) => void;
   setCurrent: (input: number) => void;
   setPositionFilter: (input: number[]) => void;
   setBootstrap: (input: NewBootstrap) => void;
@@ -37,10 +41,14 @@ export const useStore = create<State>((set) => ({
   sort: ["total_points"],
   setSort: (input) => set({ sort: input }),
   positionFilter: [1, 2, 3, 4],
-  current: 0,
+  current: 1,
   bootstrap: null,
   isLoading: false,
-  liveDetails: [],
+  liveDetails: null,
+  mainColor: "#37003c",
+  setMainColor: (input) => set({ mainColor: input }),
+  secondaryColor: "#03FF86",
+  setSecondaryColor: (input) => set({ secondaryColor: input }),
   setPositionFilter: (input) => set({ positionFilter: input }),
   setCurrent: (input) => set({ current: input }),
   setBootstrap: (input) => set({ bootstrap: input }),

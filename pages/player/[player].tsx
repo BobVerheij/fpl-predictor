@@ -4,7 +4,7 @@ import React from "react";
 import Player from "../../src/components/player/Player";
 
 const PlayerPage = ({ id }) => {
-  return <Player sizing={1} playerID={id} hasPhoto imageSide="left"></Player>;
+  return <Player sizing={1} playerID={id} imageSide="left"></Player>;
 };
 
 export async function getStaticPaths() {

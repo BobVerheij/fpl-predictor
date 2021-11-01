@@ -5,14 +5,13 @@ import { useStore } from "../../stores/ZustandStore";
 import * as Styled from "./Player.styled";
 
 interface PlayerProps {
-  hasPhoto?: boolean;
   imageSide?: string;
   playerID: number;
   reason?: string;
   sizing?: number;
 }
 
-const Player = ({ hasPhoto, imageSide, playerID, sizing }: PlayerProps) => {
+const Player = ({ imageSide, playerID, sizing }: PlayerProps) => {
   const sort = useStore((state) => state.sort);
   const positionFilter = useStore((state) => state.positionFilter);
   const bootstrap = useStore((state) => state.bootstrap);
@@ -20,17 +19,17 @@ const Player = ({ hasPhoto, imageSide, playerID, sizing }: PlayerProps) => {
   const player = bootstrap?.elements?.find(
     (element) => element.id === playerID
   );
+
   const [size, setSize] = useState<string>("");
 
   useEffect(() => {
-    setSize("S");
     if (sizing === 1) setSize("L");
-    if (sizing === 2) setSize("M");
+    setSize("M");
   }, [sort, positionFilter, current]);
 
   const picURL = `https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`;
-  const playerHistory = player?.history[current - 1].stats;
-  const playerHistoryExplained = player?.history[current - 1].explain;
+  const playerHistory = player?.history?.[current - 1]?.stats;
+  const playerHistoryExplained = player?.history?.[current - 1]?.explain;
 
   const changeSize = () => {
     if (size === "S") {
@@ -50,6 +49,7 @@ const Player = ({ hasPhoto, imageSide, playerID, sizing }: PlayerProps) => {
     >
       {size !== "S" && (
         <Styled.ScoreInfo imageSide={imageSide}>
+          <a href={`/player/${player?.id}`}>{`see player >>>`}</a>
           {playerHistoryExplained?.[0].stats
             .filter((stat) => stat.value !== 0)
             .map((stat) => (
@@ -65,19 +65,21 @@ const Player = ({ hasPhoto, imageSide, playerID, sizing }: PlayerProps) => {
                     : "var(--secondary)"
                 }
               >
-                {stat.identifier.split("_").join(" ")}:{" "}
-                {stat.identifier !== "bonus" ? stat.value : playerHistory.bps}
-                <span>{stat.points}</span>
+                <p>{stat.identifier.split("_").join(" ")}: </p>
+                <p>
+                  {stat.identifier !== "bonus" ? stat.value : playerHistory.bps}
+                </p>
+                <p>{stat.points}</p>
               </Styled.Score>
             ))}
           {ictList.map((i) =>
             Math.floor(parseInt(playerHistory?.[i])) ? (
               <Styled.Score
                 key={`${player.id} ${i}`}
-                colorOption={"rgb(137, 44, 226)"}
+                colorOption={"var(--secondary60)"}
               >
-                {i === "ict_index" ? "ICT index" : i}:{" "}
-                <span>{Math.floor(parseInt(playerHistory[i]))}</span>
+                <p>{i === "ict_index" ? "ICT index" : i}: </p>
+                <p>{Math.floor(parseInt(playerHistory[i]))}</p>
               </Styled.Score>
             ) : null
           )}
@@ -88,11 +90,13 @@ const Player = ({ hasPhoto, imageSide, playerID, sizing }: PlayerProps) => {
         <Styled.Name>{`${player?.web_name}`}</Styled.Name>
 
         <Styled.TotalPoints>
-          {playerHistory?.in_dreamteam && (
-            <Styled.SVG url={"images/star.svg"}></Styled.SVG>
-          )}
-          <p>{playerHistory?.total_points}</p>
+          {player.history?.[current - 1]?.stats.total_points}
         </Styled.TotalPoints>
+
+        {playerHistory?.in_dreamteam && (
+          <Styled.SVG url={"images/star.svg"}></Styled.SVG>
+        )}
+
         <Styled.SVG
           url={size === "S" ? "images/arrow-down.svg" : "images/arrow-up.svg"}
         ></Styled.SVG>

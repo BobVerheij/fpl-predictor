@@ -21,7 +21,7 @@ const SortBar = () => {
 
   return (
     <Styled.FilterBar>
-      <h3>Sort:</h3>
+      <Styled.FilterName>Sort:</Styled.FilterName>
       <Filter
         isDraggable
         filterList={sort}

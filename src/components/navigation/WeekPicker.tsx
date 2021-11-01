@@ -76,12 +76,12 @@ const WeekPicker = () => {
       onChange={(event) => {
         gameWeekChange(parseInt(event.target.value));
       }}
+      onBlur={(event) => {
+        gameWeekChange(parseInt(event.target.value));
+      }}
       name="gameweek"
       id="gameweek"
     >
-      <option value="" disabled>
-        Select a Game Week
-      </option>
       {bootstrap?.events
         .filter((ev) => ev.finished === true || ev.is_current === true)
         .map((ev) => (

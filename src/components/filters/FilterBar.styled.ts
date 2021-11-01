@@ -11,20 +11,26 @@ export const FilterBar = styled.div`
   width: 90vw;
   max-width: 400px;
 
-  h3 {
-    text-transform: uppercase;
-
-    text-align: end;
-    font-size: 0.6rem;
-    padding: 0.8em 1.2em;
-    line-height: 1.2em;
-    border-radius: 10em 0 0 10em;
-
-    margin: 0.3em;
-    background-color: var(--primary);
-    color: white;
-    margin-right: 0;
+  :first-of-type {
+    margin-top: 50px;
   }
+`;
+
+export const FilterName = styled.p`
+  text-transform: uppercase;
+
+  text-align: end;
+  font-size: 0.6rem;
+  padding: 0.8em 1.2em;
+  line-height: 1.2em;
+  border-radius: 10em 0 0 10em;
+
+  margin: 0.3em;
+  background-color: var(--primary);
+  color: white;
+  margin-right: 0;
+
+  box-shadow: inset 0px 0px 0px 2px var(--secondary);
 `;
 
 export const Filter = styled.a<{ selected?: boolean }>`

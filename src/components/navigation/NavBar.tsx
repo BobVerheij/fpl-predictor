@@ -25,17 +25,17 @@ const NavBar = () => {
           <Styled.ColorPicker
             type="color"
             defaultValue={mainColor}
-            onChange={(event) => {
-              localStorage.setItem("mainColor", event.target.value);
+            onBlur={(event) => {
               setMainColor(event.target.value);
+              localStorage.setItem("mainColor", event.target.value);
             }}
           />
           <Styled.ColorPicker
             type="color"
             defaultValue={secondaryColor}
-            onChange={(event) => {
-              localStorage.setItem("secondaryColor", event.target.value);
+            onBlur={(event) => {
               setSecondaryColor(event.target.value);
+              localStorage.setItem("secondaryColor", event.target.value);
             }}
           />
         </Styled.ColorPickerWrapper>

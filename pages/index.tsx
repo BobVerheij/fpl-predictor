@@ -6,13 +6,15 @@ import React, { useEffect, useState } from "react";
 import SortBar from "../src/components/filters/SortBar";
 
 import LoadingAnimation from "../src/components/loading/LoadingAnimation";
+import { NewElement } from "../src/types/Types";
+import { random } from "lodash";
 
 const GameWeekPage = () => {
   const [, setSortStats] = useState<string[]>([, "total_points"]);
   const bootstrap = useStore((state) => state.bootstrap);
   const current = useStore((state) => state.current);
   const isLoading = useStore((state) => state.isLoading);
-  const liveDetails = useStore((state) => state.liveDetails);
+
   const positionFilter = useStore((state) => state.positionFilter);
   const sort = useStore((state) => state.sort);
 
@@ -26,6 +28,7 @@ const GameWeekPage = () => {
 
   return (
     <>
+      <Player imageSide="left" playerID={null}></Player>
       <NavBar />
       {isLoading && <LoadingAnimation />}
       <FilterBar></FilterBar>
@@ -40,25 +43,33 @@ const GameWeekPage = () => {
           flexFlow: "row wrap",
         }}
       >
+        <p>{current}</p>
+        <p>{sort[0]}</p>
         {bootstrap?.elements
-          .filter(
-            (player) =>
-              player.history?.[current - 1]?.stats.minutes !== null &&
-              positionFilter.includes(player.element_type)
-          )
+          ?.filter((player) => positionFilter.includes(player.element_type))
           .sort(
-            (a, b) =>
-              b.history?.[current - 1]?.stats?.[sort[0]] -
-              a.history?.[current - 1]?.stats?.[sort[0]]
+            (a: NewElement, b: NewElement) =>
+              b.history?.find((history) => history?.gameweek === current - 1)
+                ?.stats?.[sort[0]] -
+              a.history?.find((history) => history?.gameweek === current - 1)
+                ?.stats?.[sort[0]]
           )
           .slice(0, 20)
-          .map((player, index) => (
-            <Player
-              key={player.id}
-              imageSide={index % 2 === 0 ? "left" : "right"}
-              reason={"Most Captained"}
-              playerID={player.id}
-            ></Player>
+          .map((player: NewElement, index) => (
+            <>
+              <p>
+                {
+                  player.history?.find(
+                    (history) => history?.gameweek === current - 1
+                  )?.stats?.[sort[0]]
+                }
+              </p>
+              <Player
+                key={player.id}
+                imageSide={index % 2 === 0 ? "left" : "right"}
+                playerID={player.id}
+              ></Player>
+            </>
           ))}
       </div>
     </>

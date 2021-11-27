@@ -1,6 +1,8 @@
+import { fetchBootstrap, fetchLive } from "fpl-api";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useStore } from "../../stores/ZustandStore";
+import { NewElement } from "../../types/Types";
 
 import * as Styled from "./Player.styled";
 
@@ -16,18 +18,63 @@ const Player = ({ imageSide, playerID, sizing }: PlayerProps) => {
   const positionFilter = useStore((state) => state.positionFilter);
   const bootstrap = useStore((state) => state.bootstrap);
   const current = useStore((state) => state.current);
-  const player = bootstrap?.elements?.find(
-    (element) => element.id === playerID
-  );
+  const setBootstrap = useStore((state) => state.setBootstrap);
+  const setIsLoading = useStore((state) => state.setIsLoading);
+  const setLiveDetails = useStore((state) => state.setLiveDetails);
+
+  const setMockHistory = () => {
+    let h = [];
+    for (let i = 0; i <= 12; i++) {
+      h.push({
+        id: i,
+        stats: {
+          minutes: Math.floor(Math.random() * 90),
+          goals_scored: Math.floor(Math.random() * 4),
+          assists: Math.floor(Math.random() * 4),
+          clean_sheets: Math.floor(Math.random() * 2),
+          goals_conceded: Math.floor(Math.random() * 5),
+          own_goals: Math.floor(Math.random() * 2),
+          penalties_saved: Math.floor(Math.random() * 3),
+          penalties_missed: Math.floor(Math.random() * 3),
+          yellow_cards: Math.floor(Math.random() * 2),
+          red_cards: Math.floor(Math.random() * 2),
+          saves: Math.floor(Math.random() * 10),
+          bonus: Math.floor(Math.random() * 4),
+          bps: Math.floor(Math.random() * 100),
+          influence: (Math.random() * 100).toString(),
+          creativity: (Math.random() * 100).toString(),
+          threat: (Math.random() * 100).toString(),
+          ict_index: (Math.random() * 100).toString(),
+          total_points: Math.floor(Math.random() * 30),
+          in_dreamteam: false,
+        },
+        explain: null,
+        gameweek: i + 1,
+      });
+    }
+    return h;
+  };
+
+  const mockPlayer: NewElement = {
+    web_name: "Mock Player",
+    total_points: 100,
+    history: setMockHistory(),
+  };
+
+  const player: NewElement =
+    bootstrap?.elements?.find((element) => element.id === playerID) ??
+    mockPlayer;
 
   const [size, setSize] = useState<string>("");
 
   useEffect(() => {
-    if (sizing === 1) setSize("L");
     setSize("M");
-  }, [sort, positionFilter, current]);
+  }, []);
 
-  const picURL = `https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`;
+  const picURL = player.code
+    ? `https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`
+    : `https://resources.premierleague.com/premierleague/photos/players/110x140/p169187.png`;
+
   const playerHistory = player?.history?.[current - 1]?.stats;
   const playerHistoryExplained = player?.history?.[current - 1]?.explain;
 
@@ -45,7 +92,7 @@ const Player = ({ imageSide, playerID, sizing }: PlayerProps) => {
     <Styled.Player
       size={size}
       imageSide={imageSide}
-      image={size !== "S" && player?.code ? picURL : ""}
+      image={size !== "S" && picURL}
     >
       {size !== "S" && (
         <Styled.ScoreInfo imageSide={imageSide}>
@@ -90,7 +137,7 @@ const Player = ({ imageSide, playerID, sizing }: PlayerProps) => {
         <Styled.Name>{`${player?.web_name}`}</Styled.Name>
 
         <Styled.TotalPoints>
-          {player.history?.[current - 1]?.stats.total_points}
+          {player?.history?.[current - 1]?.stats.total_points}
         </Styled.TotalPoints>
 
         {playerHistory?.in_dreamteam && (

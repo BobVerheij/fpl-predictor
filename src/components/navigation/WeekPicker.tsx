@@ -1,35 +1,16 @@
 import React from "react";
 import * as Styled from "./WeekPicker.styled";
 import { useStore } from "../../stores/ZustandStore";
+import { highestOptions } from "../../constants/HighestOptions";
+import { NewElement } from "../../types/Types";
 
 const WeekPicker = () => {
   const bootstrap = useStore((state) => state.bootstrap);
   const isLoading = useStore((state) => state.isLoading);
-  const liveDetails = useStore((state) => state.liveDetails);
   const setCurrent = useStore((state) => state.setCurrent);
-  const current = useStore((state) => state.current);
+  const liveDetails = useStore((state) => state.liveDetails);
 
-  const highestOptions = {
-    minutes: null,
-    goals_scored: null,
-    assists: null,
-    clean_sheets: null,
-    goals_conceded: null,
-    own_goals: null,
-    penalties_saved: null,
-    penalties_missed: null,
-    yellow_cards: null,
-    red_cards: null,
-    saves: null,
-    bonus: null,
-    bps: null,
-    influence: null,
-    creativity: null,
-    threat: null,
-    ict_index: null,
-    total_points: null,
-    in_dreamteam: null,
-  };
+  const current = useStore((state) => state.current);
 
   const resetAllPlayerHistory = () => {
     liveDetails.map((details, index) => {
@@ -44,7 +25,7 @@ const WeekPicker = () => {
       });
 
       return details.elements.map((player) => {
-        let currentPlayer = bootstrap.elements.find(
+        let currentPlayer: NewElement = bootstrap.elements.find(
           (element) => element.id === player.id
         );
         if (!currentPlayer.sortStats)
@@ -83,7 +64,7 @@ const WeekPicker = () => {
       id="gameweek"
     >
       {bootstrap?.events
-        .filter((ev) => ev.finished === true || ev.is_current === true)
+        ?.filter((ev) => ev.finished === true || ev.is_current === true)
         .map((ev) => (
           <option key={ev.id} value={ev.id}>
             {ev.name}

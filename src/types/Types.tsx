@@ -1,9 +1,8 @@
 import { Bootstrap, Element, LiveElement } from "fpl-api";
 
 export interface NewStats extends LiveElement {
-  gameweek: number;
-
-  highest: {
+  gameweek?: number;
+  highest?: {
     minutes?: number;
     goals_scored?: number;
     assists?: number;
@@ -27,13 +26,13 @@ export interface NewStats extends LiveElement {
 }
 
 export interface NewElement extends Element {
-  sortStats: {
+  sortStats?: {
     a: number;
     b: number;
   };
-  history: NewStats[];
+  history?: NewStats[];
 }
 
 export interface NewBootstrap extends Omit<Bootstrap, "elements"> {
-  elements: NewElement[];
+  elements: NewElement[] | Element[];
 }

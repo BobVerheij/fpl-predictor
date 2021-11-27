@@ -1,31 +1,65 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NewElement } from "../../types/Types";
+import * as Styled from "./StatsContainer.styled";
+import * as Borrowed from "../player/Player.styled";
 
 import Stat from "./Stat";
 
 import { highestOptions } from "../../constants/HighestOptions";
 import { useStore } from "../../stores/ZustandStore";
 import StatColumn from "./StatColumn";
+import Graph from "./Graph";
 
 interface StatsContainerProps {
   element: NewElement;
   calcRange: number[];
 }
 
-const StatsContainer = ({ element, calcRange }) => {
+const StatsContainer = ({ element, calcRange }: StatsContainerProps) => {
   const current = useStore((state) => state.current);
+
   const calcStart = calcRange[0];
+  const data = element.history?.map((his) => {
+    return {
+      name: his.gameweek + 1,
+      player: his.stats.total_points,
+      best: his.highest.total_points,
+    };
+  });
 
   return (
-    <div
+    <Styled.StatsContainer
       style={{
         width: "100%",
         display: "flex",
         flexFlow: "column",
         overflow: "scroll",
+        position: "relative",
       }}
       key={element.id}
     >
+      {element.news && (
+        <>
+          <Borrowed.TotalPoints style={{ alignSelf: "end" }}>
+            {element.news}
+          </Borrowed.TotalPoints>
+          <Borrowed.TotalPoints style={{ alignSelf: "end" }}>
+            {element.chance_of_playing_next_round}
+          </Borrowed.TotalPoints>
+        </>
+      )}
+      <img
+        width="33%"
+        src={`https://resources.premierleague.com/premierleague/photos/players/110x140/p${element?.code}.png`}
+        alt=""
+      />
+
+      {/* <Graph
+        calcRange={calcStart}
+        data={data}
+        playerName={element.web_name}
+      ></Graph> */}
+
       <div
         style={{
           display: "flex",
@@ -33,17 +67,23 @@ const StatsContainer = ({ element, calcRange }) => {
           flexFlow: "row nowrap",
         }}
       >
-        <p>{element.web_name}</p>
-        <p>{Math.round(element.sortStats.a * 100) / 100}</p>
-        {element.sortStats.b && (
-          <>
-            <p>{Math.round(element.sortStats.b * 100) / 100}</p>
-            <p>
-              {Math.round((element.sortStats.a / element.sortStats.b) * 100) /
-                100}
-            </p>
-          </>
-        )}
+        <Borrowed.PlayerName>
+          <Borrowed.Name>{element.web_name}</Borrowed.Name>
+          <Borrowed.TotalPoints>
+            {Math.round(element.sortStats.a * 100) / 100}
+          </Borrowed.TotalPoints>
+          {element.sortStats.b && (
+            <>
+              <Borrowed.TotalPoints>
+                {Math.round(element.sortStats.b * 100) / 100}
+              </Borrowed.TotalPoints>
+              <Borrowed.TotalPoints>
+                {Math.round((element.sortStats.a / element.sortStats.b) * 100) /
+                  100}
+              </Borrowed.TotalPoints>
+            </>
+          )}
+        </Borrowed.PlayerName>
       </div>
 
       <div
@@ -52,6 +92,7 @@ const StatsContainer = ({ element, calcRange }) => {
           flexFlow: "row nowrap",
           overflow: "scroll",
           position: "relative",
+          gap: "0.3em",
         }}
       >
         <div
@@ -161,7 +202,7 @@ const StatsContainer = ({ element, calcRange }) => {
             )
           )}
       </div>
-    </div>
+    </Styled.StatsContainer>
   );
 };
 

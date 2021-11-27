@@ -10,7 +10,7 @@ import NavBar from "../src/components/navigation/NavBar";
 import FilterBar from "../src/components/filters/FilterBar";
 
 import LoadingAnimation from "../src/components/loading/LoadingAnimation";
-import { highestOptions } from "../src/constants/HighestOptions";
+
 import StatsContainer from "../src/components/stats/StatsContainer";
 
 const StatsPage = () => {
@@ -18,7 +18,6 @@ const StatsPage = () => {
   const bootstrap = useStore((state) => state.bootstrap);
   const current = useStore((state) => state.current);
   const isLoading = useStore((state) => state.isLoading);
-
   const positionFilter = useStore((state) => state.positionFilter);
   const sort = useStore((state) => state.sort);
 
@@ -71,7 +70,7 @@ const StatsPage = () => {
       bootstrap?.elements?.filter((element) =>
         positionFilter.includes(element.element_type)
       )
-    )?.slice(offset | 0, limit | 20);
+    )?.slice(offset | 0, limit | 40);
   };
 
   return (

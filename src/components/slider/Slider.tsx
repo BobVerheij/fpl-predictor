@@ -12,54 +12,9 @@ const Slider = ({ onBlur, current, calcStart }) => {
     <Styled.Slider url={"images/arrow-up.svg"} count={current}>
       <div>
         {array.map((item, index) => (
-          <div
-            style={{
-              width: `${100 / current}%`,
-              borderTop: `${
-                index + 1 > calcStart ? "0.2em solid var(--primary)" : ""
-              }`,
-              borderBottom: `${
-                index + 1 > calcStart ? "0.2em solid var(--primary)" : ""
-              }`,
-              color: `${
-                index + 1 === calcStart || index + 1 === current ? "white" : ""
-              }`,
-              borderTopRightRadius: `${
-                index + 1 === calcStart ||
-                (index + 1 < current && index + 1 > calcStart)
-                  ? "0px"
-                  : ""
-              }`,
-              borderTopLeftRadius: `${
-                index + 1 === current ||
-                (index + 1 < current && index + 1 > calcStart)
-                  ? "0px"
-                  : ""
-              }`,
-              borderBottomRightRadius: `${
-                index + 1 === calcStart ||
-                (index + 1 < current && index + 1 > calcStart)
-                  ? "0px"
-                  : ""
-              }`,
-              borderBottomLeftRadius: `${
-                index + 1 === current ||
-                (index + 1 < current && index + 1 > calcStart)
-                  ? "0px"
-                  : ""
-              }`,
-
-              backgroundColor: `${
-                index + 1 === calcStart || index + 1 === current
-                  ? "var(--primary)"
-                  : index % 2 === 1
-                  ? "white"
-                  : "var(--secondary)"
-              }`,
-            }}
-          >
+          <Styled.SubWeek index={index} current={current} calcStart={calcStart}>
             <p>{index + 1}</p>
-          </div>
+          </Styled.SubWeek>
         ))}
       </div>
       <input

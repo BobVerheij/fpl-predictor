@@ -24,6 +24,7 @@
     "react-dom": "^17.0.2",
     "react-lottie-segments": "^1.4.9",
     "react-spinners": "^0.11.0",
+    "recharts": "^2.1.6",
     "styled-components": "^5.3.1",
     "zustand": "^3.5.13"
   },

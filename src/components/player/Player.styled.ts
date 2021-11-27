@@ -6,9 +6,7 @@ export const Player = styled.div<{
   infoSide?: string;
   size?: string;
 }>`
-  background: url(${(props) => props.image}) no-repeat,
-    linear-gradient(-45deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1))
-      no-repeat;
+  background: url(${(props) => props.image}) no-repeat, none;
 
   background-position: ${(props) =>
       props.imageSide === "left" ? "8px 100%" : "calc(100% - 8px) 100%"},

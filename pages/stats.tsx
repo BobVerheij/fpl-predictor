@@ -75,7 +75,6 @@ const StatsPage = () => {
 
   return (
     <>
-      <NavBar />
       {isLoading && <LoadingAnimation />}
       <FilterBar></FilterBar>
       <SortBar></SortBar>

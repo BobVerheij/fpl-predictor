@@ -3,16 +3,20 @@ import React, { useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import type { AppProps } from "next/app";
+import NavBar from "../src/components/navigation/NavBar";
+
+import "antd/dist/antd.variable.min.css";
 
 import { useStore } from "../src/stores/ZustandStore";
 
 import GlobalStyle from "../src/styling/global";
 
+import { ConfigProvider } from "antd";
+
 import { NewBootstrap } from "../src/types/Types";
 import { fetchBootstrap, fetchLive } from "../src/services/fetchApiData";
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const bootstrap = useStore((state) => state.bootstrap);
   const mainColor = useStore((state) => state.mainColor);
   const secondaryColor = useStore((state) => state.secondaryColor);
   const setBootstrap = useStore((state) => state.setBootstrap);
@@ -39,7 +43,22 @@ const App = ({ Component, pageProps }: AppProps) => {
       setIsLoading(false);
     };
     reloadLiveDetails();
+    ConfigProvider.config({
+      theme: {
+        primaryColor: mainColor,
+        infoColor: secondaryColor,
+      },
+    });
   }, []);
+
+  useEffect(() => {
+    ConfigProvider.config({
+      theme: {
+        primaryColor: mainColor,
+        infoColor: secondaryColor,
+      },
+    });
+  }, [mainColor, secondaryColor]);
 
   useEffect(() => {
     if (localStorage.getItem("mainColor"))
@@ -51,6 +70,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <DndProvider backend={HTML5Backend}>
       <GlobalStyle mainColor={mainColor} secondaryColor={secondaryColor} />
+      <NavBar />
       <Component {...pageProps} />
     </DndProvider>
   );

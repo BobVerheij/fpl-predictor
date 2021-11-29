@@ -146,42 +146,64 @@ export const ScoreInfo = styled.div<{ imageSide?: string }>`
   }
 `;
 
-export const Score = styled.div<{ size?: string; colorOption: string }>`
-  /* border: 1px solid; */
-
-  box-shadow: inset 0 0 0 2px ${(props) => props.colorOption};
-  border-radius: 50px;
+export const Score = styled.div<{}>`
   display: flex;
   flex: row nowrap;
   justify-content: flex-end;
-  font-size: 0.7rem;
+  align-items: center;
+  font-size: 0.66rem;
+  width: auto;
   margin: 0 0 0.4em 0;
-  max-width: 100%;
 
   p {
-    text-align: center;
-    color: white;
+    border-radius: 50px;
+    box-shadow: inset 0 0 0 1px var(--primary);
+    color: black;
     font-weight: 900;
     margin: 0;
     min-width: 2.5em;
-    padding: 0.6em 0em;
+    padding: 0.3em 0em;
     text-align: center;
     text-transform: capitalize;
+    border-radius: 50px 0 0 50px;
   }
 
-  p:first-of-type {
+  p.key {
+    margin-right: auto;
+    border-radius: none;
+    box-shadow: none;
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    padding: 0.6em 1em;
+    padding: 0.3em 1em;
   }
 
-  p:last-of-type {
+  p.score-total {
     font-weight: 900;
     border-radius: 0 50px 50px 0;
-    background-color: ${(props) => props.colorOption};
-    color: ${(props) =>
-      props.colorOption === "rgb(137, 44, 226)" ? "white" : "black"};
+    background-color: var(--primary);
+    color: white;
+  }
+  p.solo {
+    border-radius: 50px;
+  }
+  .yellow {
+    width: 0.66rem;
+    height: 1rem;
+    border-radius: 0.1rem;
+    transform: rotate(0.02turn);
+    background-color: gold;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+    margin: auto;
+  }
+  .red {
+    width: 0.66rem;
+    height: 1rem;
+    border-radius: 0.1rem;
+    transform: rotate(0.02turn);
+    background-color: red;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+    margin: auto;
   }
 `;

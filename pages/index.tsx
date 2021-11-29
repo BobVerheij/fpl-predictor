@@ -7,7 +7,14 @@ import SortBar from "../src/components/filters/SortBar";
 
 import LoadingAnimation from "../src/components/loading/LoadingAnimation";
 import { NewElement } from "../src/types/Types";
-import { random } from "lodash";
+import { Badge, Button, Card, Image, Space } from "antd";
+import {
+  FrownOutlined,
+  LoadingOutlined,
+  MehOutlined,
+  SmileOutlined,
+} from "@ant-design/icons";
+import PlayerCard from "./test";
 
 const GameWeekPage = () => {
   const [, setSortStats] = useState<string[]>([, "total_points"]);
@@ -28,14 +35,13 @@ const GameWeekPage = () => {
 
   return (
     <>
-      <Player imageSide="left" playerID={null}></Player>
-      <NavBar />
       {isLoading && <LoadingAnimation />}
       <FilterBar></FilterBar>
       <SortBar></SortBar>
 
       <div
         style={{
+          gap: "1rem",
           margin: "0 auto",
           maxWidth: "400px",
           width: "90vw",
@@ -43,8 +49,6 @@ const GameWeekPage = () => {
           flexFlow: "row wrap",
         }}
       >
-        <p>{current}</p>
-        <p>{sort[0]}</p>
         {bootstrap?.elements
           ?.filter((player) => positionFilter.includes(player.element_type))
           .sort(
@@ -54,22 +58,9 @@ const GameWeekPage = () => {
               a.history?.find((history) => history?.gameweek === current - 1)
                 ?.stats?.[sort[0]]
           )
-          .slice(0, 20)
+          .slice(0, 40)
           .map((player: NewElement, index) => (
-            <>
-              <p>
-                {
-                  player.history?.find(
-                    (history) => history?.gameweek === current - 1
-                  )?.stats?.[sort[0]]
-                }
-              </p>
-              <Player
-                key={player.id}
-                imageSide={index % 2 === 0 ? "left" : "right"}
-                playerID={player.id}
-              ></Player>
-            </>
+            <PlayerCard player={player} isLoading={isLoading}></PlayerCard>
           ))}
       </div>
     </>
@@ -77,3 +68,11 @@ const GameWeekPage = () => {
 };
 
 export default GameWeekPage;
+
+{
+  /* <Player
+  key={player.id}
+  imageSide={index % 2 === 0 ? "left" : "right"}
+  playerID={player.id}
+></Player>; */
+}

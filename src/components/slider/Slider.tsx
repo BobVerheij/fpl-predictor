@@ -1,6 +1,7 @@
 import React from "react";
 import * as Styled from "./Slider.styled";
 import { debounce } from "lodash";
+import { uuid } from "uuidv4";
 
 const Slider = ({ onBlur, current, calcStart }) => {
   const array = Array.apply(
@@ -12,7 +13,12 @@ const Slider = ({ onBlur, current, calcStart }) => {
     <Styled.Slider url={"images/arrow-up.svg"} count={current}>
       <div>
         {array.map((item, index) => (
-          <Styled.SubWeek index={index} current={current} calcStart={calcStart}>
+          <Styled.SubWeek
+            key={uuid()}
+            index={index}
+            current={current}
+            calcStart={calcStart}
+          >
             <p>{index + 1}</p>
           </Styled.SubWeek>
         ))}

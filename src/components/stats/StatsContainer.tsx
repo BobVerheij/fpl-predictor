@@ -10,6 +10,8 @@ import { useStore } from "../../stores/ZustandStore";
 import StatColumn from "./StatColumn";
 import Graph from "./Graph";
 
+import { uuid } from "uuidv4";
+
 interface StatsContainerProps {
   element: NewElement;
   calcRange: number[];
@@ -54,11 +56,11 @@ const StatsContainer = ({ element, calcRange }: StatsContainerProps) => {
         alt=""
       />
 
-      {/* <Graph
+      <Graph
         calcRange={calcStart}
         data={data}
         playerName={element.web_name}
-      ></Graph> */}
+      ></Graph>
 
       <div
         style={{
@@ -121,6 +123,7 @@ const StatsContainer = ({ element, calcRange }: StatsContainerProps) => {
           </p>
           {Object.keys(highestOptions).map((key) => (
             <p
+              key={uuid()}
               style={{
                 textTransform: "capitalize",
                 padding: "0",
@@ -151,6 +154,7 @@ const StatsContainer = ({ element, calcRange }: StatsContainerProps) => {
           .map((history, index) =>
             history.stats.minutes ? (
               <StatColumn
+                key={uuid()}
                 calcStart={calcStart}
                 history={history}
                 index={index}
@@ -164,6 +168,7 @@ const StatsContainer = ({ element, calcRange }: StatsContainerProps) => {
                   ></Stat>
                   {Object.keys(history?.stats).map((key) => (
                     <Stat
+                      key={uuid()}
                       statName={key}
                       value={history.stats[key]}
                       highest={history.highest[key]}

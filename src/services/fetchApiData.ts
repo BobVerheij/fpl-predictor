@@ -20,7 +20,6 @@ async function fetchPublicEndpoint(endpoint: string): Promise<Response> {
   });
 
   if (!response.ok) {
-    console.log(response.json());
   }
   return response;
 }

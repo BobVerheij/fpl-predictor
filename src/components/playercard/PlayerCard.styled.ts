@@ -1,19 +1,24 @@
 import styled from "styled-components";
 
-import { Timeline } from "antd";
-
 export const PlayerCard = styled.div<{
   active: boolean;
   photo: string;
   open: boolean;
 }>`
   background-image: url(${({ photo }) => photo ?? ""});
-  background-repeat: no-repeat;
   background-position: ${({ active }) => (active ? "5%" : "90%")} 100%;
+  background-repeat: no-repeat;
   background-size: auto ${({ active }) => (active ? "95%" : "90%")};
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
   box-shadow: inset 0 -0.5rem 2rem 0 rgba(0, 0, 0, 0.3);
-
+  cursor: auto;
+  height: ${({ open }) => (open ? "200px" : "0px")};
+  overflow: hidden;
+  padding: ${({ open }) => (open ? "1.5rem" : "0px")};
+  position: relative;
   transition: all ${({ active }) => (active ? "0s ease-in" : "0.4s ease-out")};
+  transition: height ${({ open }) => (!open ? "0s" : "0.3s")} ease;
 
   .ant-drawer-mask {
     background: none !important;
@@ -52,6 +57,10 @@ export const PlayerBasics = styled.div`
   h1 {
     width: 66%;
     line-height: 2rem;
+    color: var(--primary80);
+    b {
+      color: var(--primary);
+    }
   }
 
   p {
@@ -68,7 +77,7 @@ export const PlayerBasics = styled.div`
     padding-left: 1rem;
     padding-right: 4rem;
     font-weight: 700;
-    ::before {
+    ::after {
       content: "";
       position: absolute;
       height: 1.5rem;

@@ -12,6 +12,7 @@ import FilterBar from "../src/components/filters/FilterBar";
 import LoadingAnimation from "../src/components/loading/LoadingAnimation";
 
 import StatsContainer from "../src/components/stats/StatsContainer";
+import { uuid } from "uuidv4";
 
 const StatsPage = () => {
   const [calcStart, setCalcStart] = useState<number>(1);
@@ -79,11 +80,11 @@ const StatsPage = () => {
       <FilterBar></FilterBar>
       <SortBar></SortBar>
 
-      <Slider
+      {/* <Slider
         onBlur={setCalcStart}
         current={current}
         calcStart={calcStart}
-      ></Slider>
+      ></Slider> */}
 
       <div
         style={{
@@ -95,6 +96,7 @@ const StatsPage = () => {
       >
         {filteredElements(bootstrap)?.map((element: NewElement) => (
           <StatsContainer
+            key={uuid()}
             element={element}
             calcRange={calcRange}
           ></StatsContainer>

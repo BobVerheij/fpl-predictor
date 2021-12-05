@@ -1,33 +1,13 @@
-import {
-  ArrowRightOutlined,
-  DownOutlined,
-  FrownOutlined,
-  Loading3QuartersOutlined,
-  LoadingOutlined,
-  MehOutlined,
-  MinusOutlined,
-  PlusOutlined,
-  RightCircleOutlined,
-  SmileOutlined,
-  UpOutlined,
-} from "@ant-design/icons";
-import {
-  Badge,
-  Button,
-  Card,
-  Drawer,
-  Image,
-  Space,
-  Switch,
-  Timeline,
-} from "antd";
-import { useEffect, useRef, useState } from "react";
-import * as Styled from "../src/components/test/PlayerCard.styled";
-import { useStore } from "../src/stores/ZustandStore";
-import { NewElement } from "../src/types/Types";
-
-import { Score } from "../src/components/player/Player.styled";
-import Gameweeks from "../src/components/gameweeks/Gameweeks";
+import React, { useEffect } from "react";
+import { Badge, Button, Card, Drawer, Switch } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { NewElement } from "../../types/Types";
+import { Score } from "../player/Player.styled";
+import { useState } from "react";
+import { useStore } from "../../stores/ZustandStore";
+import { uuid } from "uuidv4";
+import * as Styled from "./PlayerCard.styled";
+import { Timeline } from "../timeline/Timeline";
 
 interface IPlayerCard {
   player: NewElement;
@@ -38,12 +18,21 @@ const PlayerCard = ({ player, isLoading }: IPlayerCard) => {
   const [active, toggleActive] = useState<boolean>(false);
   const [open, toggleOpen] = useState<boolean>(false);
   const current = useStore((state) => state.current);
+  const [showGameweek, setShowGameweek] = useState<number>(current);
   const sort = useStore((state) => state.sort);
 
-  const playerHistory = player?.history?.[current - 1]?.stats;
-  const playerHistoryExplained = player?.history?.[current - 1]?.explain;
+  const playerHistory = player?.history?.[showGameweek - 1]?.stats;
+  const playerHistoryExplained = player?.history?.[showGameweek - 1]?.explain;
 
   const ictList = ["creativity", "influence", "threat"];
+
+  useEffect(() => {
+    setShowGameweek(current);
+  }, [current, active, sort]);
+
+  const handleClick = (input: number) => {
+    setShowGameweek(input);
+  };
 
   const Cover = () => {
     return (
@@ -52,29 +41,19 @@ const PlayerCard = ({ player, isLoading }: IPlayerCard) => {
           open={open}
           photo={`https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`}
           active={active}
-          style={{
-            position: "relative",
-            height: open ? "200px" : "0px",
-            padding: open ? "1.5rem" : "0px",
-            overflow: "hidden",
-            borderTopLeftRadius: "0.5rem",
-            borderTopRightRadius: "0.5rem",
-            transition: `height ${!open ? "0s" : "0.3s"} ease`,
-          }}
           className="site-drawer-render-in-current-wrapper"
         >
           {!active && (
             <Styled.PlayerBasics>
-              <h1 style={{ color: "var(--primary80)" }}>
-                {player.first_name}{" "}
-                <b style={{ color: "var(--primary)" }}>{player.second_name}</b>
+              <h1>
+                {player.first_name} <b>{player.second_name}</b>
               </h1>
               <Button onClick={() => toggleActive(!active)} type="ghost">
                 See More
               </Button>
               <p>
                 {sort[0].replace("_", " ")}{" "}
-                {player.history?.[current - 1]?.stats?.[sort[0]]}
+                {player.history?.[showGameweek - 1]?.stats?.[sort[0]]}
               </p>
             </Styled.PlayerBasics>
           )}
@@ -96,12 +75,26 @@ const PlayerCard = ({ player, isLoading }: IPlayerCard) => {
               background: "none !important",
             }}
           >
-            <Gameweeks player={player} active={active} />
-            <h2 style={{ textAlign: "center" }}>Gameweek: {current}</h2>
+            <Timeline
+              handleClick={handleClick}
+              showGameweek={showGameweek}
+              active={active}
+            />
+
+            <h1
+              style={{
+                fontSize: "1.5rem",
+                textAlign: "center",
+                fontWeight: 700,
+                color: "var(--primary90)",
+              }}
+            >
+              Gameweek: {showGameweek}
+            </h1>
             {playerHistoryExplained?.[0]?.stats
               ?.filter((stat) => stat.value !== 0)
               .map((stat) => (
-                <Score key={`${player.id} ${stat.value} ${stat.identifier}`}>
+                <Score key={uuid()}>
                   <p className="key">
                     {stat?.identifier.split("_").join(" ")}:{" "}
                   </p>
@@ -128,12 +121,12 @@ const PlayerCard = ({ player, isLoading }: IPlayerCard) => {
             >
               <p className="key">Total Points:</p>
               <p className="score-total solo">
-                {player?.history?.[current - 1]?.stats?.total_points}
+                {player?.history?.[showGameweek - 1]?.stats?.total_points}
               </p>
             </Score>
             {ictList.map((i) =>
               Math.floor(parseInt(playerHistory?.[i])) ? (
-                <Score key={`${player.id} ${i}`}>
+                <Score key={uuid()}>
                   <p className="key">{i === "ict_index" ? "ICT index" : i}: </p>
                   <p className="score-total solo">
                     {Math.floor(parseInt(playerHistory[i]))}
@@ -150,7 +143,7 @@ const PlayerCard = ({ player, isLoading }: IPlayerCard) => {
             >
               <p className="key">ICT Index:</p>
               <p className="score-total solo">
-                {player?.history?.[current - 1]?.stats?.ict_index}
+                {player?.history?.[showGameweek - 1]?.stats?.ict_index}
               </p>
             </Score>
           </Drawer>
@@ -163,6 +156,7 @@ const PlayerCard = ({ player, isLoading }: IPlayerCard) => {
     <Card
       hoverable
       style={{
+        cursor: "auto",
         width: "90vw",
         maxWidth: "400px",
         borderRadius: "0.5rem",
@@ -182,7 +176,9 @@ const PlayerCard = ({ player, isLoading }: IPlayerCard) => {
           fontWeight: 900,
           color: "black",
         }}
-        count={!isLoading ? player.history?.[current - 1]?.stats?.[sort[0]] : 0}
+        count={
+          !isLoading ? player.history?.[showGameweek - 1]?.stats?.[sort[0]] : 0
+        }
       >
         <Button
           style={{

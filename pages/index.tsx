@@ -1,20 +1,11 @@
-import { useStore } from "../src/stores/ZustandStore";
-import FilterBar from "../src/components/filters/FilterBar";
-import NavBar from "../src/components/navigation/NavBar";
-import Player from "../src/components/player/Player";
 import React, { useEffect, useState } from "react";
-import SortBar from "../src/components/filters/SortBar";
-
-import LoadingAnimation from "../src/components/loading/LoadingAnimation";
 import { NewElement } from "../src/types/Types";
-import { Badge, Button, Card, Image, Space } from "antd";
-import {
-  FrownOutlined,
-  LoadingOutlined,
-  MehOutlined,
-  SmileOutlined,
-} from "@ant-design/icons";
-import PlayerCard from "./test";
+import { useStore } from "../src/stores/ZustandStore";
+import { uuid } from "uuidv4";
+import FilterBar from "../src/components/filters/FilterBar";
+import LoadingAnimation from "../src/components/loading/LoadingAnimation";
+import PlayerCard from "../src/components/playercard/PlayerCard";
+import SortBar from "../src/components/filters/SortBar";
 
 const GameWeekPage = () => {
   const [, setSortStats] = useState<string[]>([, "total_points"]);
@@ -60,7 +51,11 @@ const GameWeekPage = () => {
           )
           .slice(0, 40)
           .map((player: NewElement, index) => (
-            <PlayerCard player={player} isLoading={isLoading}></PlayerCard>
+            <PlayerCard
+              key={uuid()}
+              player={player}
+              isLoading={isLoading}
+            ></PlayerCard>
           ))}
       </div>
     </>

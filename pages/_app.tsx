@@ -31,7 +31,6 @@ const App = ({ Component, pageProps }: AppProps) => {
   };
 
   useEffect(() => {
-    console.log("reloads data");
     reloadBootstrap();
     const reloadLiveDetails = async () => {
       setIsLoading(true);

@@ -3,6 +3,7 @@ import * as Styled from "./WeekPicker.styled";
 import { useStore } from "../../stores/ZustandStore";
 import { highestOptions } from "../../constants/HighestOptions";
 import { NewElement } from "../../types/Types";
+import { uuid } from "uuidv4";
 
 const WeekPicker = () => {
   const bootstrap = useStore((state) => state.bootstrap);
@@ -54,6 +55,7 @@ const WeekPicker = () => {
     <Styled.WeekPicker
       disabled={isLoading}
       defaultValue={current}
+      value={current}
       onChange={(event) => {
         gameWeekChange(parseInt(event.target.value));
       }}
@@ -66,7 +68,7 @@ const WeekPicker = () => {
       {bootstrap?.events
         ?.filter((ev) => ev.finished === true || ev.is_current === true)
         .map((ev) => (
-          <option key={ev.id} value={ev.id}>
+          <option key={uuid()} value={ev.id}>
             {ev.name}
           </option>
         ))}

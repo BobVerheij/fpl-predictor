@@ -1,6 +1,6 @@
 import React from "react";
 import hexRgb from "hex-rgb";
-import Lottie from "react-lottie-segments";
+import Lottie from "lottie-react";
 import { useStore } from "../../stores/ZustandStore";
 
 const LoadingAnimation = () => {
@@ -1798,18 +1798,19 @@ const LoadingAnimation = () => {
     markers: [],
   };
 
-  const loopOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: ball,
-    height: 150,
-    rendererSettings: {
-      className: "animation",
-    },
-  };
-
   return (
-    <>{prim && sec ? <Lottie height={150} options={loopOptions} /> : null}</>
+    <>
+      {prim && sec ? (
+        <Lottie
+          width={"100%"}
+          height={150}
+          animationData={ball}
+          loop
+          autoplay
+          rendererSettings={{ className: "animation" }}
+        />
+      ) : null}
+    </>
   );
 };
 

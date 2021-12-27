@@ -1,15 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 
 import * as Styled from "./NavBar.styled";
 import WeekPicker from "./WeekPicker";
 import { useStore } from "../../stores/ZustandStore";
+import { Button, ConfigProvider } from "antd";
 
 const NavBar = () => {
   const setMainColor = useStore((state) => state.setMainColor);
   const mainColor = useStore((state) => state.mainColor);
   const setSecondaryColor = useStore((state) => state.setSecondaryColor);
   const secondaryColor = useStore((state) => state.secondaryColor);
+
+  const liveDetails = useStore((state) => state.liveDetails);
+
+  useEffect(() => {
+    ConfigProvider.config({
+      theme: {
+        primaryColor: mainColor,
+        infoColor: secondaryColor,
+      },
+    });
+  }, [mainColor, secondaryColor]);
 
   return (
     <Styled.NavBar>

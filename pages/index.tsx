@@ -1,21 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { NewElement } from "../src/types/Types";
 import { useStore } from "../src/stores/ZustandStore";
-import { uuid } from "uuidv4";
 import FilterBar from "../src/components/filters/FilterBar";
-import LoadingAnimation from "../src/components/loading/LoadingAnimation";
 import PlayerCard from "../src/components/playercard/PlayerCard";
 import SortBar from "../src/components/filters/SortBar";
+import { element } from "prop-types";
 
 const GameWeekPage = () => {
   const [, setSortStats] = useState<string[]>([, "total_points"]);
   const bootstrap = useStore((state) => state.bootstrap);
   const current = useStore((state) => state.current);
   const isLoading = useStore((state) => state.isLoading);
+  const liveDetails = useStore((state) => state.liveDetails);
 
   const positionFilter = useStore((state) => state.positionFilter);
   const sort = useStore((state) => state.sort);
 
+  const [thisLive, setThisLive] = useState(current || 0);
+
+  const live = liveDetails?.[thisLive];
+
+  const sortedLiveElements = live?.elements?.sort(
+    (a, b) => b.stats[sort[0]] - a.stats[sort[0]]
+  );
+
+  const filteredLiveElements = sortedLiveElements?.filter((element) =>
+    positionFilter.includes(
+      bootstrap?.elements?.find((player) => player.id === element.id)
+        .element_type
+    )
+  );
+
+  const limitedLiveElements = filteredLiveElements?.slice(0, 20);
+
+  const limitedPlayers = limitedLiveElements?.map((lim) =>
+    bootstrap?.elements?.find((player) => player.id === lim.id)
+  );
   useEffect(() => {
     if (sort.length < 2) {
       setSortStats([, ...sort]);
@@ -24,9 +44,12 @@ const GameWeekPage = () => {
     }
   }, [sort]);
 
+  useEffect(() => {
+    setThisLive(current - 1);
+  }, [current]);
+
   return (
     <>
-      {isLoading && <LoadingAnimation />}
       <FilterBar></FilterBar>
       <SortBar></SortBar>
 
@@ -40,34 +63,21 @@ const GameWeekPage = () => {
           flexFlow: "row wrap",
         }}
       >
-        {bootstrap?.elements
-          ?.filter((player) => positionFilter.includes(player.element_type))
-          .sort(
-            (a: NewElement, b: NewElement) =>
-              b.history?.find((history) => history?.gameweek === current - 1)
-                ?.stats?.[sort[0]] -
-              a.history?.find((history) => history?.gameweek === current - 1)
-                ?.stats?.[sort[0]]
-          )
-          .slice(0, 40)
-          .map((player: NewElement, index) => (
-            <PlayerCard
-              key={uuid()}
-              player={player}
-              isLoading={isLoading}
-            ></PlayerCard>
-          ))}
+        {limitedPlayers
+          ? limitedPlayers?.map((player, index) => (
+              <PlayerCard
+                weekDetails={limitedLiveElements[index]}
+                key={player.id}
+                player={bootstrap.elements.find(
+                  (element) => element.id === player.id
+                )}
+                isLoading={isLoading}
+              ></PlayerCard>
+            ))
+          : null}
       </div>
     </>
   );
 };
 
 export default GameWeekPage;
-
-{
-  /* <Player
-  key={player.id}
-  imageSide={index % 2 === 0 ? "left" : "right"}
-  playerID={player.id}
-></Player>; */
-}

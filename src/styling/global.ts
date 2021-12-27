@@ -25,17 +25,18 @@ const GlobalStyle = createGlobalStyle<{
 }
 
 body{
-	margin: 0;
-	padding: 20px;
+	align-items: center;
+	background-attachment: fixed;
+	background-origin: padding-box;
+	background-position: bottom left;
+	background-repeat: no-repeat;
+	background: var(--primary);
 	display: flex;
 	flex-flow: column;
 	justify-content: start;
-	align-items: center;
-	background: var(--primary);
-	background-attachment: fixed;
-	background-repeat: no-repeat;
-	background-origin: padding-box;
-	background-position: bottom left;
+	margin: 0;
+	overscroll-behavior-x: none;
+	padding: 20px;
 }
 `;
 

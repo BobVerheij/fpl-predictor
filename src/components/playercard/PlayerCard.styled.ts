@@ -1,4 +1,14 @@
 import styled from "styled-components";
+import { Card } from "antd";
+
+export const SCard = styled(Card)`
+  cursor: auto;
+  pointer-events: all;
+  width: 90vw;
+  max-width: 400px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+`;
 
 export const PlayerCard = styled.div<{
   active: boolean;

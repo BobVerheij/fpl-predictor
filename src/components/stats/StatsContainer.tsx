@@ -1,213 +1,213 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { NewElement } from "../../types/Types";
 import * as Styled from "./StatsContainer.styled";
-import * as Borrowed from "../player/Player.styled";
 
-import Stat from "./Stat";
-
-import { highestOptions } from "../../constants/HighestOptions";
 import { useStore } from "../../stores/ZustandStore";
-import StatColumn from "./StatColumn";
-import Graph from "./Graph";
 
-import { uuid } from "uuidv4";
+import { Badge, Button, Drawer, Switch } from "antd";
+import { LoadingOutlined, WarningOutlined } from "@ant-design/icons";
+
+import { Difficulties } from "./Difficulties";
 
 interface StatsContainerProps {
-  element: NewElement;
-  calcRange: number[];
+  element: { player: NewElement; stat: number; count: number };
+  range: number[];
 }
 
-const StatsContainer = ({ element, calcRange }: StatsContainerProps) => {
-  const current = useStore((state) => state.current);
+const StatsContainer = ({ element, range }: StatsContainerProps) => {
+  const bootstrap = useStore((state) => state.bootstrap);
+  const fixtures = useStore((state) => state.fixtures);
+  const { player, stat, count } = element;
+  const isLoading = useStore((state) => state.isLoading);
+  const [open, toggleOpen] = useState(false);
+  const [active, toggleActive] = useState(false);
+  const liveDetails = useStore((state) => state.liveDetails);
 
-  const calcStart = calcRange[0];
-  const data = element.history?.map((his) => {
-    return {
-      name: his.gameweek + 1,
-      player: his.stats.total_points,
-      best: his.highest.total_points,
-    };
-  });
+  const nextGameweekDifficulties = [...fixtures]
+    .filter(
+      (fixture) =>
+        (fixture.team_a === player.team || fixture.team_h === player.team) &&
+        !fixture.finished &&
+        fixture.kickoff_time
+    )
+    .sort(
+      (a, b) =>
+        new Date(a.kickoff_time).getTime() - new Date(b.kickoff_time).getTime()
+    )
+    .slice(0, 5)
+    .map((fixture) => {
+      if (fixture.team_a === player.team) {
+        return fixture.team_a_difficulty;
+      }
+      return fixture.team_h_difficulty;
+    });
+
+  const averages = [...nextGameweekDifficulties].reduce(
+    (acc, val) => {
+      return [acc[0] + val, acc[1] + 1];
+    },
+    [0, 0]
+  );
+
+  const Cover = () => {
+    return (
+      <>
+        <Styled.StatsCard
+          open={open}
+          photo={`https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`}
+          active={active}
+          className="site-drawer-render-in-current-wrapper"
+        >
+          <Button onClick={() => toggleActive(!active)}> - - - </Button>
+          <Difficulties values={nextGameweekDifficulties} average={averages} />
+          <Drawer
+            keyboard
+            forceRender
+            placement="right"
+            closable={false}
+            onClose={() => toggleActive(!active)}
+            visible={active}
+            getContainer={false}
+            width="60%"
+            drawerStyle={{ background: "none !important" }}
+            style={{
+              position: "absolute",
+              boxShadow: "none",
+              overflow: "hidden",
+            }}
+            maskStyle={{ background: "none !important" }}
+            contentWrapperStyle={{
+              background: "none !important",
+            }}
+            bodyStyle={{
+              backdropFilter: "blur(10)",
+              background: "none !important",
+            }}
+          >
+            {liveDetails?.map((live) => (
+              <>
+                <Styled.Stat>
+                  {
+                    live?.elements?.find((el) => player?.id === el.id)?.stats
+                      .minutes
+                  }
+                </Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+                <Styled.Stat>test</Styled.Stat>
+              </>
+            ))}
+          </Drawer>
+        </Styled.StatsCard>
+      </>
+    );
+  };
 
   return (
-    <Styled.StatsContainer
-      style={{
-        width: "100%",
+    <Styled.SCard
+      hoverable
+      bodyStyle={{
+        padding: "1rem",
         display: "flex",
-        flexFlow: "column",
-        overflow: "scroll",
-        position: "relative",
+        flexFlow: "row nowrap",
+        justifyContent: "flex-start",
+        alignItems: "center",
       }}
-      key={element.id}
+      cover={Cover()}
     >
-      {element.news && (
-        <>
-          <Borrowed.TotalPoints style={{ alignSelf: "end" }}>
-            {element.news}
-          </Borrowed.TotalPoints>
-          <Borrowed.TotalPoints style={{ alignSelf: "end" }}>
-            {element.chance_of_playing_next_round}
-          </Borrowed.TotalPoints>
-        </>
-      )}
-      <img
-        width="33%"
-        src={`https://resources.premierleague.com/premierleague/photos/players/110x140/p${element?.code}.png`}
-        alt=""
-      />
-
-      <Graph
-        calcRange={calcStart}
-        data={data}
-        playerName={element.web_name}
-      ></Graph>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          flexFlow: "row nowrap",
-        }}
+      <Badge
+        style={{ backgroundColor: "var(--secondary)", color: "black" }}
+        count={stat.toFixed(2)}
       >
-        <Borrowed.PlayerName>
-          <Borrowed.Name>{element.web_name}</Borrowed.Name>
-          <Borrowed.TotalPoints>
-            {Math.round(element.sortStats.a * 100) / 100}
-          </Borrowed.TotalPoints>
-          {element.sortStats.b && (
-            <>
-              <Borrowed.TotalPoints>
-                {Math.round(element.sortStats.b * 100) / 100}
-              </Borrowed.TotalPoints>
-              <Borrowed.TotalPoints>
-                {Math.round((element.sortStats.a / element.sortStats.b) * 100) /
-                  100}
-              </Borrowed.TotalPoints>
-            </>
-          )}
-        </Borrowed.PlayerName>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          flexFlow: "row nowrap",
-          overflow: "scroll",
-          position: "relative",
-          gap: "0.3em",
-        }}
-      >
-        <div
+        <Button
+          type="default"
           style={{
-            order: -1000,
+            border: "1px solid var(--primary)",
+            gap: "12px",
+            color: "var(--primary)",
+            backdropFilter: "blur(10)",
             display: "flex",
-            flexFlow: "column",
-            justifyContent: "space-around",
-            alignItems: "flex-start",
-            paddingLeft: "12px",
-            color: "white",
-            minWidth: "120px",
-            background: "var(--primary)",
-            boxShadow: "0 0 20px rgba(0, 0, 0, 1)",
+            flexFlow: "row nowrap",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            width: "150px",
           }}
         >
           <p
             style={{
-              textTransform: "capitalize",
+              fontWeight: 600,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
               padding: "0",
               margin: "0",
-              fontSize: "0.8rem",
             }}
           >
-            Gameweek
+            {!isLoading ? player?.web_name : "Loading"}
           </p>
-          {Object.keys(highestOptions).map((key) => (
-            <p
-              key={uuid()}
-              style={{
-                textTransform: "capitalize",
-                padding: "0",
-                margin: "0",
-                fontSize: "0.8rem",
-              }}
-            >
-              {key.split("_").join(" ")}
-            </p>
-          ))}
-        </div>
+          <div
+            style={{
+              marginLeft: "auto",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {isLoading && <LoadingOutlined></LoadingOutlined>}
+          </div>
+        </Button>
+      </Badge>
 
-        <div
+      <p>
+        {count} / {range[1] - range[0]}
+      </p>
+
+      <Switch
+        disabled={isLoading}
+        defaultChecked={false}
+        onChange={() => {
+          toggleActive(false);
+          toggleOpen(!open);
+        }}
+        onClick={() => {
+          toggleActive(false);
+          toggleOpen(!open);
+        }}
+        style={{
+          marginLeft: "auto",
+        }}
+      ></Switch>
+      {player.news && (
+        <WarningOutlined
+          onClick={() => {}}
           style={{
-            display: "flex",
-            flexFlow: "column",
-            justifyContent: "space-around",
-            alignItems: "center",
-            minWidth: `${
-              element?.history?.find((history) => history?.id > 0).gameweek * 40
-            }px`,
-            background: "var(--primary)",
+            cursor: "pointer",
+            position: "absolute",
+            right: "-0.66rem",
+            top: "-0.66rem",
+            color: "white",
+            backgroundColor: "var(--primary)",
+            fontSize: "1rem",
+            padding: "0.4rem",
+            borderRadius: ".5rem",
           }}
-        ></div>
-
-        {element?.history
-          ?.filter((history) => history.gameweek < current)
-          .map((history, index) =>
-            history.stats.minutes ? (
-              <StatColumn
-                key={uuid()}
-                calcStart={calcStart}
-                history={history}
-                index={index}
-                id={element.id}
-              >
-                <>
-                  <Stat
-                    statName="gameweek"
-                    value={history.gameweek + 1}
-                    highest=""
-                  ></Stat>
-                  {Object.keys(history?.stats).map((key) => (
-                    <Stat
-                      key={uuid()}
-                      statName={key}
-                      value={history.stats[key]}
-                      highest={history.highest[key]}
-                    ></Stat>
-                  ))}
-                </>
-              </StatColumn>
-            ) : (
-              <div
-                style={{
-                  order: -(index + 1),
-                  display: "flex",
-                  flexFlow: "column",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                  minWidth: "20px",
-                  background: "var(--primary)",
-                  borderTop:
-                    history.gameweek === current - 1
-                      ? "4px solid var(--primary)"
-                      : "",
-                  borderBottom:
-                    history.gameweek === current - 1
-                      ? "4px solid var(--primary)"
-                      : "",
-                  borderLeft:
-                    history.gameweek === current - 1
-                      ? "4px solid var(--primary)"
-                      : "",
-                  borderRight:
-                    history.gameweek === current - 1
-                      ? "4px solid var(--primary)"
-                      : "",
-                }}
-              ></div>
-            )
-          )}
-      </div>
-    </Styled.StatsContainer>
+        ></WarningOutlined>
+      )}
+    </Styled.SCard>
   );
 };
 

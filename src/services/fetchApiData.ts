@@ -1,4 +1,4 @@
-import { Live } from "fpl-api";
+import { Fixture, Live } from "fpl-api";
 import { NewBootstrap } from "../types/Types";
 
 export async function fetchBootstrap(): Promise<NewBootstrap> {
@@ -8,6 +8,11 @@ export async function fetchBootstrap(): Promise<NewBootstrap> {
 
 export async function fetchLive(eventId: number): Promise<Live> {
   const response = await fetchPublicEndpoint(`event/${eventId}/live/`);
+  return response.json();
+}
+
+export async function fetchFixtures(): Promise<Fixture[]> {
+  const response = await fetchPublicEndpoint(`fixtures/`);
   return response.json();
 }
 

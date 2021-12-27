@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { css } from "styled-components";
 
 export const Player = styled.div<{
   image?: string;
@@ -41,17 +42,17 @@ export const Player = styled.div<{
 
   ${(props) =>
     props.size === "S" &&
-    `
-		background: none;
-		height: auto;
-		margin-right: 1em;
-		padding: 0;
+    css`
+      background: none;
+      height: auto;
+      margin-right: 1em;
+      padding: 0;
 
-		> div {
-			margin: 0;
-		}
-		box-shadow: none;
-		`};
+      > div {
+        margin: 0;
+      }
+      box-shadow: none;
+    `};
 `;
 
 export const Reason = styled.a`
@@ -146,7 +147,7 @@ export const ScoreInfo = styled.div<{ imageSide?: string }>`
   }
 `;
 
-export const Score = styled.div<{}>`
+export const Score = styled.div<{ colorOption?: {} }>`
   display: flex;
   flex: row nowrap;
   justify-content: flex-end;

@@ -1,7 +1,7 @@
 import { Fixture, Live } from "fpl-api";
 import { NewBootstrap } from "../types/Types";
 
-const url = "https://fpl-proxy.vercel.app/fpl";
+const url = "https://fpl-proxy.vercel.app/fpl/";
 
 export async function fetchBootstrap(): Promise<NewBootstrap> {
   const response = await fetchPublicEndpoint("bootstrap-static/");

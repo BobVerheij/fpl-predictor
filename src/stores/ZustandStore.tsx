@@ -10,53 +10,58 @@ import {
   LiveElement,
 } from "fpl-api";
 import create from "zustand";
-
-interface NewStats extends LiveElement {
-  gameweek: number;
-}
-
-interface NewElement extends Element {
-  history: NewStats[];
-}
-
-interface NewBootstrap extends Omit<Bootstrap, "elements"> {
-  elements: NewElement[];
-}
+import { NewBootstrap } from "../types/Types";
 
 interface State {
-  draggingIsHappening: boolean;
-  setDraggingIsHappening: (input: boolean) => void;
-  sort: string[];
-  setSort: (input: string[]) => void;
-  positionFilter: number[];
-  current: number;
   bootstrap: NewBootstrap;
+  current: number;
+  draggingIsHappening: boolean;
+  fixtures: Fixture[];
   isLoading: boolean;
+  latestGameweek: number;
   liveDetails: Live[];
-  setCurrent: (input: number) => void;
-  setPositionFilter: (input: number[]) => void;
+  mainColor: string;
+  positionFilter: number[];
+  secondaryColor: string;
   setBootstrap: (input: NewBootstrap) => void;
+  setCurrent: (input: number) => void;
+  setDraggingIsHappening: (input: boolean) => void;
+  setFixtures: (input: Fixture[]) => void;
   setIsLoading: (input: boolean) => void;
+  setLatestGameweek: (input: number) => void;
   setLiveDetails: (input: Live[]) => void;
+  setMainColor: (input: string) => void;
+  setPositionFilter: (input: number[]) => void;
+  setSecondaryColor: (input: string) => void;
+  setSort: (input: string[]) => void;
   setTeams: (input: Team[]) => void;
+  sort: string[];
   teams: Team[];
 }
 
 export const useStore = create<State>((set) => ({
-  draggingIsHappening: false,
-  setDraggingIsHappening: (input) => set({ draggingIsHappening: input }),
-  sort: ["total_points"],
-  setSort: (input) => set({ sort: input }),
-  positionFilter: [1, 2, 3, 4],
-  current: 0,
   bootstrap: null,
+  current: 1,
+  draggingIsHappening: false,
+  fixtures: [],
   isLoading: false,
-  liveDetails: [],
-  setPositionFilter: (input) => set({ positionFilter: input }),
-  setCurrent: (input) => set({ current: input }),
+  latestGameweek: 0,
+  liveDetails: null,
+  mainColor: "#37003c",
+  positionFilter: [1, 2, 3, 4],
+  secondaryColor: "#03FF86",
   setBootstrap: (input) => set({ bootstrap: input }),
+  setCurrent: (input) => set({ current: input }),
+  setDraggingIsHappening: (input) => set({ draggingIsHappening: input }),
+  setFixtures: (input) => set({ fixtures: input }),
   setIsLoading: (input) => set({ isLoading: input }),
+  setLatestGameweek: (input) => set({ latestGameweek: input }),
   setLiveDetails: (input) => set({ liveDetails: input }),
+  setMainColor: (input) => set({ mainColor: input }),
+  setPositionFilter: (input) => set({ positionFilter: input }),
+  setSecondaryColor: (input) => set({ secondaryColor: input }),
+  setSort: (input) => set({ sort: input }),
   setTeams: (input) => set({ teams: input }),
+  sort: ["total_points"],
   teams: [],
 }));

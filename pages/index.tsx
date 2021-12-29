@@ -1,185 +1,80 @@
-import { fetchBootstrap, fetchLive } from "fpl-api";
-import Player from "../src/components/player/Player";
-import Lottie from "react-lottie-segments";
-import * as ball from "../public/animations/fpl-ball.json";
-
 import React, { useEffect, useState } from "react";
-
+import { NewElement } from "../src/types/Types";
 import { useStore } from "../src/stores/ZustandStore";
-
-import NavBar from "../src/components/navigation/NavBar";
 import FilterBar from "../src/components/filters/FilterBar";
+import PlayerCard from "../src/components/playercard/PlayerCard";
 import SortBar from "../src/components/filters/SortBar";
+import { element } from "prop-types";
 
 const GameWeekPage = () => {
+  const [, setSortStats] = useState<string[]>([, "total_points"]);
   const bootstrap = useStore((state) => state.bootstrap);
-  const setBootstrap = useStore((state) => state.setBootstrap);
   const current = useStore((state) => state.current);
-  const setCurrent = useStore((state) => state.setCurrent);
+  const isLoading = useStore((state) => state.isLoading);
+  const liveDetails = useStore((state) => state.liveDetails);
 
+  const positionFilter = useStore((state) => state.positionFilter);
   const sort = useStore((state) => state.sort);
 
-  const teams = useStore((state) => state.teams);
-  const setTeams = useStore((state) => state.setTeams);
-  const isLoading = useStore((state) => state.isLoading);
-  const setIsLoading = useStore((state) => state.setIsLoading);
+  const [thisLive, setThisLive] = useState(current || 0);
 
-  const liveDetails = useStore((state) => state.liveDetails);
-  const setLiveDetails = useStore((state) => state.setLiveDetails);
+  const live = liveDetails?.[thisLive];
 
-  const [currentLoadingPercentage, setCurrentLoadingPercentage] =
-    useState<number>(0);
-  const positionFilter = useStore((state) => state.positionFilter);
+  const sortedLiveElements = live?.elements?.sort(
+    (a, b) => b.stats[sort[0]] - a.stats[sort[0]]
+  );
 
-  const loopOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: ball,
-    width: 100,
-    height: 100,
-    rendererSettings: {
-      className: "animation",
-    },
-  };
+  const filteredLiveElements = sortedLiveElements?.filter((element) =>
+    positionFilter.includes(
+      bootstrap?.elements?.find((player) => player.id === element.id)
+        .element_type
+    )
+  );
 
-  const reloadBootstrap = async () => {
-    const newBootstrap: any = await fetchBootstrap();
-    setBootstrap(newBootstrap);
-  };
+  const limitedLiveElements = filteredLiveElements?.slice(0, 20);
 
-  if (!bootstrap) {
-    reloadBootstrap();
-    if (teams === []) setTeams(bootstrap?.teams);
-  }
+  const limitedPlayers = limitedLiveElements?.map((lim) =>
+    bootstrap?.elements?.find((player) => player.id === lim.id)
+  );
+  useEffect(() => {
+    if (sort.length < 2) {
+      setSortStats([, ...sort]);
+    } else {
+      setSortStats([...sort].splice(0, 2));
+    }
+  }, [sort]);
 
   useEffect(() => {
-    const reloadLiveDetails = async () => {
-      setIsLoading(true);
-      let newLiveDetails = [];
-      for (let i = 1; i <= 38; i++) {
-        newLiveDetails = [...newLiveDetails, await fetchLive(i)];
-        setCurrentLoadingPercentage(Math.floor((i / 38) * 100));
-      }
-      setLiveDetails(newLiveDetails);
-      setIsLoading(false);
-    };
-    reloadLiveDetails();
-  }, []);
-
-  const resetAllPlayerHistory = (value) => {
-    liveDetails.map((details, index) =>
-      details.elements.map((player) => {
-        let currentPlayer = bootstrap.elements.find(
-          (element) => element.id === player.id
-        );
-        if (!currentPlayer.history) currentPlayer.history = [];
-        currentPlayer.history[index] = {
-          id: player.id,
-          stats: player.stats,
-          explain: player.explain,
-          gameweek: index,
-        };
-      })
-    );
-  };
-
-  const gameWeekChange = async (value: number) => {
-    setCurrent(value);
-    console.log("gameweek changed to " + value);
-    resetAllPlayerHistory(value);
-  };
+    setThisLive(current - 1);
+  }, [current]);
 
   return (
     <>
-      <NavBar gameWeekChange={gameWeekChange}></NavBar>
-
-      {isLoading && (
-        <Lottie
-          style={{ width: "80vw", maxWidth: "400px", padding: "8px" }}
-          height={200}
-          options={loopOptions}
-        />
-      )}
-
       <FilterBar></FilterBar>
       <SortBar></SortBar>
 
       <div
         style={{
+          gap: "1rem",
           margin: "0 auto",
           maxWidth: "400px",
+          width: "90vw",
           display: "flex",
           flexFlow: "row wrap",
         }}
       >
-        {bootstrap?.elements
-          .filter(
-            (element) =>
-              liveDetails?.[current - 1]?.elements.find(
-                (ldPlayer) =>
-                  ldPlayer.id === element.id &&
-                  ldPlayer.stats.total_points !== 0
-              ) && positionFilter.includes(element.element_type)
-          )
-          .sort(
-            (a, b) =>
-              (sort.includes("total_points") &&
-                liveDetails?.[current - 1]?.elements[b.id - 1]?.stats
-                  .total_points -
-                  liveDetails?.[current - 1]?.elements[a.id - 1]?.stats
-                    .total_points) ||
-              (sort.includes("bps") &&
-                liveDetails?.[current - 1]?.elements[b.id - 1]?.stats.bps -
-                  liveDetails?.[current - 1]?.elements[a.id - 1]?.stats.bps) ||
-              (sort.includes("bonus") &&
-                liveDetails?.[current - 1]?.elements[b.id - 1]?.stats.bonus -
-                  liveDetails?.[current - 1]?.elements[a.id - 1]?.stats
-                    .bonus) ||
-              (sort.includes("creativity") &&
-                parseInt(
-                  liveDetails?.[current - 1]?.elements[b.id - 1]?.stats
-                    .creativity
-                ) -
-                  parseInt(
-                    liveDetails?.[current - 1]?.elements[a.id - 1]?.stats
-                      .creativity
-                  )) ||
-              (sort.includes("influence") &&
-                parseInt(
-                  liveDetails?.[current - 1]?.elements[b.id - 1]?.stats
-                    .influence
-                ) -
-                  parseInt(
-                    liveDetails?.[current - 1]?.elements[a.id - 1]?.stats
-                      .influence
-                  )) ||
-              (sort.includes("threat") &&
-                parseInt(
-                  liveDetails?.[current - 1]?.elements[b.id - 1]?.stats.threat
-                ) -
-                  parseInt(
-                    liveDetails?.[current - 1]?.elements[a.id - 1]?.stats.threat
-                  )) ||
-              (sort.includes("ict_index") &&
-                parseInt(
-                  liveDetails?.[current - 1]?.elements[b.id - 1]?.stats
-                    .ict_index
-                ) -
-                  parseInt(
-                    liveDetails?.[current - 1]?.elements[a.id - 1]?.stats
-                      .ict_index
-                  ))
-          )
-          .slice(0, 20)
-          .map((player, index) => (
-            <Player
-              key={player.id}
-              imageSide={index % 2 === 0 ? "left" : "right"}
-              reason={"Most Captained"}
-              playerID={player.id}
-              sizing={index + 1}
-            ></Player>
-          ))}
+        {limitedPlayers
+          ? limitedPlayers?.map((player, index) => (
+              <PlayerCard
+                weekDetails={limitedLiveElements[index]}
+                key={player.id}
+                player={bootstrap.elements.find(
+                  (element) => element.id === player.id
+                )}
+                isLoading={isLoading}
+              ></PlayerCard>
+            ))
+          : null}
       </div>
     </>
   );

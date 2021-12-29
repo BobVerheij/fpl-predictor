@@ -7,23 +7,30 @@ export const FilterBar = styled.div`
   align-items: stretch;
   height: auto;
   margin: 4px auto;
-  width: 80%;
-  h3 {
-    text-transform: uppercase;
 
-    text-align: end;
-    font-size: 0.8rem;
-    padding: 8px 12px;
-    line-height: 9px;
-    border-radius: 100px 0 0 100px;
-
-    margin: 4px;
-    background-color: var(--primary);
-    color: white;
-    margin-right: 0;
-  }
   width: 90vw;
   max-width: 400px;
+
+  :first-of-type {
+    margin-top: 50px;
+  }
+`;
+
+export const FilterName = styled.p`
+  text-transform: uppercase;
+
+  text-align: end;
+  font-size: 0.6rem;
+  padding: 0.8em 1.2em;
+  line-height: 1.2em;
+  border-radius: 10em 0 0 10em;
+
+  margin: 0.3em;
+  background-color: var(--primary);
+  color: white;
+  margin-right: 0;
+
+  box-shadow: inset 0px 0px 0px 2px var(--secondary);
 `;
 
 export const Filter = styled.a<{ selected?: boolean }>`
@@ -31,12 +38,11 @@ export const Filter = styled.a<{ selected?: boolean }>`
   text-transform: uppercase;
   font-weight: 900;
   text-align: left;
-  font-size: 0.8rem;
-  padding: 8px 12px;
-  line-height: 9px;
-  border-radius: 100px;
-
-  margin: 4px;
+  font-size: 0.6rem;
+  padding: 0.8em 1.2em;
+  line-height: 1.2em;
+  border-radius: 10em;
+  margin: 0.3em;
 
   text-align: center;
   color: ${(props) => (!props.selected ? "white" : "var(--primary)")};
@@ -48,9 +54,7 @@ export const Filter = styled.a<{ selected?: boolean }>`
 
   ${(props) =>
     props.selected &&
-    "margin: 4px 0; border-radius: 0; border-right: 2px solid var(--primary);"};
-
-	
+    "margin: 0.3em 0; border-radius: 0; border-right: 0.3em solid var(--primary);"};
 
   :hover {
     opacity: 0.8;

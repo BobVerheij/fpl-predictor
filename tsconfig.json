@@ -18,7 +18,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/services/fetchBootstrap.js"
+    "src/services/fetchBootstrap.js",
+    "public/animations/fpl-ball.js"
   ],
   "exclude": ["node_modules"]
 }

@@ -21,26 +21,30 @@ const FilterBar = () => {
 
   return (
     <Styled.FilterBar>
-      <h3>Filter:</h3>
+      <Styled.FilterName>Filter:</Styled.FilterName>
       <Filter
+        isDraggable={false}
         filterList={positionFilter}
         handleClick={handleClick}
         value={1}
         name={"GK"}
       ></Filter>
       <Filter
+        isDraggable={false}
         filterList={positionFilter}
         handleClick={handleClick}
         value={2}
         name={"DEF"}
       ></Filter>
       <Filter
+        isDraggable={false}
         filterList={positionFilter}
         handleClick={handleClick}
         value={3}
         name={"MID"}
       ></Filter>
       <Filter
+        isDraggable={false}
         filterList={positionFilter}
         handleClick={handleClick}
         value={4}

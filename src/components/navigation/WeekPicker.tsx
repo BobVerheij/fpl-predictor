@@ -1,32 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as Styled from "./WeekPicker.styled";
 import { useStore } from "../../stores/ZustandStore";
+import { uuid } from "uuidv4";
 
-interface WeekPickerProps {
-  isLoading: boolean;
-  handleChange: (value: number) => void;
-}
-
-const WeekPicker = ({ isLoading, handleChange }: WeekPickerProps) => {
+const WeekPicker = () => {
   const bootstrap = useStore((state) => state.bootstrap);
+  const current = useStore((state) => state.current);
+  const isLoading = useStore((state) => state.isLoading);
+  const latestGameweek = useStore((state) => state.latestGameweek);
+  const setCurrent = useStore((state) => state.setCurrent);
+
+  useEffect(() => {
+    if (latestGameweek) setCurrent(latestGameweek);
+  }, [latestGameweek]);
+
+  const gameWeekChange = async (event) => {
+    setCurrent(parseInt(event.target.value));
+  };
 
   return (
     <Styled.WeekPicker
       disabled={isLoading}
-      defaultValue={""}
-      onChange={(event) => {
-        handleChange(Number(event.target.value));
-      }}
+      onBlur={gameWeekChange}
+      onChange={gameWeekChange}
+      value={current}
       name="gameweek"
       id="gameweek"
     >
-      <option value="" disabled>
-        Select a Game Week
-      </option>
       {bootstrap?.events
-        .filter((ev) => ev.finished === true || ev.is_current === true)
+        ?.filter((ev) => ev.finished === true || ev.is_current === true)
         .map((ev) => (
-          <option key={ev.id} value={ev.id}>
+          <option key={uuid()} value={ev.id}>
             {ev.name}
           </option>
         ))}

@@ -5,7 +5,7 @@ export const RangeSelector = styled.div`
   justify-content: center;
   align-items: center;
 
-  margin: 1rem auto;
+  margin: 2rem auto 1rem auto;
 
   position: relative;
 

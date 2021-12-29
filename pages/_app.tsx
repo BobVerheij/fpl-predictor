@@ -93,6 +93,10 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <DndProvider backend={HTML5Backend}>
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      ></meta>
       <GlobalStyle mainColor={mainColor} secondaryColor={secondaryColor} />
       <NavBar />
       {isLoading && <LoadingAnimation />}

@@ -10,6 +10,7 @@ import { uuid } from "uuidv4";
 import FilterBar from "../src/components/filters/FilterBar";
 import SortBar from "../src/components/filters/SortBar";
 import StatsContainer from "../src/components/stats/StatsContainer";
+import { RangeSelector } from "../src/components/stats/RangeSelector.styled";
 
 interface IPLayerValues {
   id: number;
@@ -127,19 +128,7 @@ const StatsPage = () => {
       <FilterBar></FilterBar>
       <SortBar></SortBar>
 
-      {/* <Slider
-        onBlur={setCalcStart}
-        current={current}
-        calcStart={calcStart}
-      ></Slider> */}
-      <div
-        style={{
-          display: "flex",
-          gap: "0.3rem",
-          alignItems: "center",
-          margin: "1rem",
-        }}
-      >
+      <RangeSelector>
         <Select
           style={{ minWidth: 100 }}
           id="beginRangeSelet"
@@ -168,17 +157,7 @@ const StatsPage = () => {
             </Select.Option>
           ))}
         </Select>
-
-        {/* <Button style={{ minWidth: 50 }} disabled>
-          {range[0] + 1}
-        </Button>
-        <Button style={{ minWidth: 50 }} disabled>
-          {range[1]}
-        </Button>
-        <Button style={{ minWidth: 80 }} disabled>
-          {range[1] - range[0]} GW
-        </Button> */}
-      </div>
+      </RangeSelector>
 
       <div
         style={{

@@ -1,19 +1,15 @@
 import React, { useEffect } from "react";
+
+import { Button, Select } from "antd";
+import { Element } from "fpl-api";
 import { fetchFixtures } from "../src/services/fetchApiData";
-import { NewBootstrap, NewElement } from "../src/types/Types";
 import { useState } from "react";
 import { useStore } from "../src/stores/ZustandStore";
 import { uuid } from "uuidv4";
+
 import FilterBar from "../src/components/filters/FilterBar";
-import Slider from "../src/components/slider/Slider";
 import SortBar from "../src/components/filters/SortBar";
 import StatsContainer from "../src/components/stats/StatsContainer";
-import { stat } from "fs";
-import { Element } from "fpl-api";
-import { Button, Select } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
-import { values } from "lodash";
-import { element } from "prop-types";
 
 interface IPLayerValues {
   id: number;
@@ -78,9 +74,12 @@ const StatsPage = () => {
     updateValues();
   }, [range, sort]);
 
-  const bestPlayers: { player: Element; stat: number; count: number }[] = [
-    ...playerValues,
-  ]
+  const bestPlayers: {
+    player: Element;
+    stat: number;
+    count: number;
+    difficulties: number[];
+  }[] = [...playerValues]
     .map((values) => {
       const player = bootstrap?.elements?.find(
         (element) => element?.id === values?.id

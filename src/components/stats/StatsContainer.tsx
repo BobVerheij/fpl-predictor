@@ -5,13 +5,7 @@ import * as Styled from "./StatsContainer.styled";
 import { useStore } from "../../stores/ZustandStore";
 
 import { Badge, Button, Drawer, Switch } from "antd";
-import {
-  ExclamationCircleFilled,
-  ExclamationCircleOutlined,
-  LoadingOutlined,
-  WarningFilled,
-  WarningOutlined,
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 
 import { Difficulties } from "./Difficulties";
 

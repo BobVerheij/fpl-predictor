@@ -134,6 +134,7 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
             justifyContent: "flex-start",
             alignItems: "center",
             width: "150px",
+            fontWeight: 900,
           }}
         >
           <p

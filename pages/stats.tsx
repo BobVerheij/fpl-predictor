@@ -15,23 +15,30 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { values } from "lodash";
 import { element } from "prop-types";
 
+interface IPLayerValues {
+  id: number;
+  stat: number;
+  count: number;
+  difficulties: number[];
+}
+
 const StatsPage = () => {
-  const [calcStart, setCalcStart] = useState<number>(1);
   const bootstrap = useStore((state) => state.bootstrap);
   const current = useStore((state) => state.current);
+  const fixtures = useStore((state) => state.fixtures);
+  const liveDetails = useStore((state) => state.liveDetails);
   const positionFilter = useStore((state) => state.positionFilter);
   const sort = useStore((state) => state.sort);
-  const liveDetails = useStore((state) => state.liveDetails);
+  const setFixtures = useStore((state) => state.setFixtures);
+
   const [playerValues, setPlayerValues] = useState<
     { id: number; stat: number; count: number }[]
   >([]);
 
-  const [fixtures, setFixtures] = useState(null);
-
   const [range, setRange] = useState([0, current]);
 
   const updateValues = () => {
-    let baseValues: { id: number; stat: number; count: number }[] = [];
+    let baseValues: IPLayerValues[] = [];
 
     liveDetails?.slice(range[0], range[1]).map((details) => {
       return details.elements.map((element) => {
@@ -46,6 +53,7 @@ const StatsPage = () => {
             id: element.id,
             stat: parseInt(element.stats[sort[0]]),
             count: 1,
+            difficulties: [0],
           });
         }
       });
@@ -82,8 +90,35 @@ const StatsPage = () => {
     })
     .filter((element) => positionFilter.includes(element.player.element_type))
     .filter((element) => element.count > 0.66 * (range[1] - range[0]))
-    // .filter((element) => !element.player.chance_of_playing_next_round)
     .sort((a, b) => b.stat - a.stat)
+    .map((element) => {
+      const { player } = element;
+      const difficulties = [...fixtures]
+        .filter(
+          (fixture) =>
+            (fixture.team_a === player.team ||
+              fixture.team_h === player.team) &&
+            !fixture.finished &&
+            fixture.kickoff_time
+        )
+        .sort(
+          (a, b) =>
+            new Date(a.kickoff_time).getTime() -
+            new Date(b.kickoff_time).getTime()
+        )
+        .slice(0, 5)
+        .map((fixture) => {
+          if (fixture.team_a === player.team) {
+            return fixture.team_a_difficulty;
+          }
+          return fixture.team_h_difficulty;
+        });
+      return { ...element, difficulties };
+    })
+    .filter((element) => {
+      const sum = element.difficulties.reduce((acc, diff) => acc + diff, 0);
+      return sum / element.difficulties.length <= 3;
+    })
     .slice(0, 20);
 
   const rangeItems = Array.apply(null, Array(current)).map(function () {});

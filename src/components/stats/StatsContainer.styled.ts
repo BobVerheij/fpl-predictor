@@ -1,13 +1,33 @@
 import { Card } from "antd";
 import styled from "styled-components";
 
-export const SCard = styled(Card)`
+export const SCard = styled(Card)<{ status?: string; active?: boolean }>`
   cursor: auto;
   pointer-events: all;
   width: 90vw;
   max-width: 400px;
   border-radius: 0.5rem;
   overflow: visible;
+  border-color: ${({ status }) =>
+    status === "0"
+      ? "red"
+      : status === "25"
+      ? "orange"
+      : status === "75"
+      ? "yellow"
+      : "white"} !important;
+  box-shadow: inset 0 0 ${({ active }) => (active ? "1rem" : "0")}
+    ${({ active }) => (active ? "0.3rem" : "0")}
+    ${({ status }) =>
+      status === "0"
+        ? "red"
+        : status === "25"
+        ? "orange"
+        : status === "75"
+        ? "yellow"
+        : "white"} !important;
+
+  transition: all 1s ease;
 
   .ant-card-body {
     display: flex;

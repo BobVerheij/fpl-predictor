@@ -2,10 +2,11 @@ import React from "react";
 
 interface IDifficulties {
   values: number[];
-  average: number[];
 }
 
-export const Difficulties = ({ values, average }: IDifficulties) => {
+export const Difficulties = ({ values }: IDifficulties) => {
+  const average = values[0] / values[1];
+
   const getColor = (i) => {
     switch (i) {
       case 1:
@@ -27,7 +28,14 @@ export const Difficulties = ({ values, average }: IDifficulties) => {
     <>
       <p>Average {(average[0] / average[1]).toFixed(1)}</p>
       <p>Matches {average[1]}</p>
-      <div style={{ display: "flex", gap: "0.2rem", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "row wrap",
+          gap: "0.2rem",
+          alignItems: "center",
+        }}
+      >
         {values.map((value, index) => {
           const color = getColor(value);
           return (

@@ -5,12 +5,23 @@ import * as Styled from "./StatsContainer.styled";
 import { useStore } from "../../stores/ZustandStore";
 
 import { Badge, Button, Drawer, Switch } from "antd";
-import { LoadingOutlined, WarningOutlined } from "@ant-design/icons";
+import {
+  ExclamationCircleFilled,
+  ExclamationCircleOutlined,
+  LoadingOutlined,
+  WarningFilled,
+  WarningOutlined,
+} from "@ant-design/icons";
 
 import { Difficulties } from "./Difficulties";
 
 interface StatsContainerProps {
-  element: { player: NewElement; stat: number; count: number };
+  element: {
+    player: NewElement;
+    stat: number;
+    count: number;
+    difficulties: number[];
+  };
   range: number[];
 }
 
@@ -23,32 +34,6 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
   const [active, toggleActive] = useState(false);
   const liveDetails = useStore((state) => state.liveDetails);
 
-  const nextGameweekDifficulties = [...fixtures]
-    .filter(
-      (fixture) =>
-        (fixture.team_a === player.team || fixture.team_h === player.team) &&
-        !fixture.finished &&
-        fixture.kickoff_time
-    )
-    .sort(
-      (a, b) =>
-        new Date(a.kickoff_time).getTime() - new Date(b.kickoff_time).getTime()
-    )
-    .slice(0, 5)
-    .map((fixture) => {
-      if (fixture.team_a === player.team) {
-        return fixture.team_a_difficulty;
-      }
-      return fixture.team_h_difficulty;
-    });
-
-  const averages = [...nextGameweekDifficulties].reduce(
-    (acc, val) => {
-      return [acc[0] + val, acc[1] + 1];
-    },
-    [0, 0]
-  );
-
   const Cover = () => {
     return (
       <>
@@ -59,7 +44,7 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
           className="site-drawer-render-in-current-wrapper"
         >
           <Button onClick={() => toggleActive(!active)}> - - - </Button>
-          <Difficulties values={nextGameweekDifficulties} average={averages} />
+          <Difficulties values={element.difficulties} />
           <Drawer
             keyboard
             forceRender
@@ -119,6 +104,8 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
 
   return (
     <Styled.SCard
+      active={open}
+      status={player?.chance_of_playing_next_round?.toString()}
       hoverable
       bodyStyle={{
         padding: "1rem",
@@ -137,6 +124,14 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
           type="default"
           style={{
             border: "1px solid var(--primary)",
+            borderColor:
+              player.chance_of_playing_next_round === 0
+                ? "red"
+                : player.chance_of_playing_next_round === 25
+                ? "orange"
+                : player.chance_of_playing_next_round === 75
+                ? "yellow"
+                : "var(--primary)",
             gap: "12px",
             color: "var(--primary)",
             backdropFilter: "blur(10)",
@@ -191,22 +186,29 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
           marginLeft: "auto",
         }}
       ></Switch>
-      {player.news && (
-        <WarningOutlined
+      {/* {player.news && (
+        <ExclamationCircleOutlined
           onClick={() => {}}
           style={{
             cursor: "pointer",
             position: "absolute",
             right: "-0.66rem",
-            top: "-0.66rem",
+            top: "calc(50% - 0.7rem)",
             color: "white",
-            backgroundColor: "var(--primary)",
-            fontSize: "1rem",
-            padding: "0.4rem",
-            borderRadius: ".5rem",
+            backgroundColor:
+              player.chance_of_playing_next_round === 0
+                ? "red"
+                : player.chance_of_playing_next_round === 25
+                ? "orange"
+                : player.chance_of_playing_next_round === 75
+                ? "yellow"
+                : "white",
+            fontSize: "0.8rem",
+            padding: "0.3rem",
+            borderRadius: "0.2rem",
           }}
-        ></WarningOutlined>
-      )}
+        ></ExclamationCircleOutlined>
+      )} */}
     </Styled.SCard>
   );
 };

@@ -1,6 +1,8 @@
 import { Fixture, Live } from "fpl-api";
 import { NewBootstrap } from "../types/Types";
 
+const url = "https://fpl-proxy.vercel.app/fpl";
+
 export async function fetchBootstrap(): Promise<NewBootstrap> {
   const response = await fetchPublicEndpoint("bootstrap-static/");
   return await response.json();
@@ -17,7 +19,7 @@ export async function fetchFixtures(): Promise<Fixture[]> {
 }
 
 async function fetchPublicEndpoint(endpoint: string): Promise<Response> {
-  const response = await fetch(`http://localhost:8080/fpl/${endpoint}`, {
+  const response = await fetch(`${url}${endpoint}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

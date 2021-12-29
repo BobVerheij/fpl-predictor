@@ -169,7 +169,7 @@ const StatsPage = () => {
           ))}
         </Select>
 
-        <Button style={{ minWidth: 50 }} disabled>
+        {/* <Button style={{ minWidth: 50 }} disabled>
           {range[0] + 1}
         </Button>
         <Button style={{ minWidth: 50 }} disabled>
@@ -177,7 +177,7 @@ const StatsPage = () => {
         </Button>
         <Button style={{ minWidth: 80 }} disabled>
           {range[1] - range[0]} GW
-        </Button>
+        </Button> */}
       </div>
 
       <div

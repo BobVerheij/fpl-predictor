@@ -9,7 +9,7 @@ import {
 } from "recharts";
 
 interface IGraph {
-  data: { avg: number | string }[];
+  data: { avg: string }[];
   playerName: string;
 }
 

@@ -5,7 +5,7 @@ interface IDifficulties {
 }
 
 export const Difficulties = ({ values }: IDifficulties) => {
-  const average = values[0] / values[1];
+  const average = values.reduce((acc, val) => acc + val, 0);
 
   const getColor = (i) => {
     switch (i) {
@@ -26,8 +26,8 @@ export const Difficulties = ({ values }: IDifficulties) => {
 
   return (
     <>
-      <p>Average {(average[0] / average[1]).toFixed(1)}</p>
-      <p>Matches {average[1]}</p>
+      <p>Average {average / values.length}</p>
+      <p>Matches {values.length}</p>
       <div
         style={{
           display: "flex",

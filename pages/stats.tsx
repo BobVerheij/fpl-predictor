@@ -89,7 +89,7 @@ const StatsPage = () => {
       return { player, stat, count: values.count };
     })
     .filter((element) => positionFilter.includes(element.player.element_type))
-    .filter((element) => element.count > 0.66 * (range[1] - range[0]))
+    .filter((element) => element.count > 0.5 * (range[1] - range[0]))
     .sort((a, b) => b.stat - a.stat)
     .map((element) => {
       const { player } = element;

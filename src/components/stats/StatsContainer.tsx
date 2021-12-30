@@ -14,6 +14,8 @@ import {
 
 import { Difficulties } from "./Difficulties";
 import { CircleLoader } from "react-spinners";
+import { reduce } from "lodash";
+import Graph from "./Graph";
 
 interface StatsContainerProps {
   element: {
@@ -26,17 +28,38 @@ interface StatsContainerProps {
 }
 
 const StatsContainer = ({ element, range }: StatsContainerProps) => {
-  const bootstrap = useStore((state) => state.bootstrap);
-  const fixtures = useStore((state) => state.fixtures);
+  const sort = useStore((state) => state.sort);
   const { player, stat, count } = element;
   const isLoading = useStore((state) => state.isLoading);
   const [open, toggleOpen] = useState(false);
   const [active, toggleActive] = useState(false);
   const liveDetails = useStore((state) => state.liveDetails);
 
+  const playedMatches = liveDetails
+    .map((details) => details.elements.find((el) => player.id === el.id))
+    .filter((pl) => pl?.stats?.minutes > 0);
+
+  const spanRange = range[1] - range[0];
+
+  let spans = [];
+  for (let i = 0; i <= playedMatches.length - spanRange; i++) {
+    const span =
+      playedMatches
+        .slice(i, i + spanRange)
+        .reduce((acc, match) => acc + parseInt(match.stats[sort[0]]), 0) /
+      spanRange;
+    spans.push({
+      avg: span.toFixed(2),
+    });
+  }
+
+  console.log("Spans", spans);
+
   const Cover = () => {
     return (
       <>
+        <Graph data={spans} playerName={player.web_name}></Graph>
+
         <Styled.StatsCard
           open={open}
           photo={`https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`}
@@ -103,97 +126,98 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
   };
 
   return (
-    <Styled.SCard
-      active={open}
-      status={player?.chance_of_playing_next_round?.toString()}
-      hoverable
-      bodyStyle={{
-        padding: "1rem",
-        display: "flex",
-        flexFlow: "row nowrap",
-        justifyContent: "flex-start",
-        alignItems: "center",
-      }}
-      cover={Cover()}
-    >
-      <Badge
-        style={{ backgroundColor: "var(--secondary)", color: "black" }}
-        count={stat.toFixed(2)}
+    <>
+      <Styled.SCard
+        active={open}
+        status={player?.chance_of_playing_next_round?.toString()}
+        hoverable
+        bodyStyle={{
+          padding: "1rem",
+          display: "flex",
+          flexFlow: "row nowrap",
+          justifyContent: "flex-start",
+          alignItems: "center",
+        }}
+        cover={Cover()}
       >
-        <Button
-          type="default"
-          style={{
-            border: "1px solid var(--primary)",
-            borderColor:
-              player.chance_of_playing_next_round === 0
-                ? "red"
-                : player.chance_of_playing_next_round === 25
-                ? "orange"
-                : player.chance_of_playing_next_round === 75
-                ? "yellow"
-                : "var(--primary)",
-            gap: "12px",
-            color: "var(--primary)",
-            backdropFilter: "blur(10)",
-            display: "flex",
-            flexFlow: "row nowrap",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            width: "150px",
-            fontWeight: 900,
-          }}
+        <Badge
+          style={{ backgroundColor: "var(--secondary)", color: "black" }}
+          count={stat.toFixed(2)}
         >
-          <p
+          <Button
+            type="default"
             style={{
-              fontWeight: 600,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              padding: "0",
-              margin: "0",
-            }}
-          >
-            {!isLoading ? player?.web_name : "Loading"}
-          </p>
-          <div
-            style={{
-              marginLeft: "auto",
+              border: "1px solid var(--primary)",
+              borderColor:
+                player.chance_of_playing_next_round === 0
+                  ? "red"
+                  : player.chance_of_playing_next_round === 25
+                  ? "orange"
+                  : player.chance_of_playing_next_round === 75
+                  ? "yellow"
+                  : "var(--primary)",
+              gap: "12px",
+              color: "var(--primary)",
+              backdropFilter: "blur(10)",
               display: "flex",
-              justifyContent: "center",
+              flexFlow: "row nowrap",
+              justifyContent: "flex-start",
               alignItems: "center",
+              width: "150px",
+              fontWeight: 900,
             }}
           >
-            {isLoading && <LoadingOutlined></LoadingOutlined>}
-          </div>
-        </Button>
-      </Badge>
+            <p
+              style={{
+                fontWeight: 600,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                padding: "0",
+                margin: "0",
+              }}
+            >
+              {!isLoading ? player?.web_name : "Loading"}
+            </p>
+            <div
+              style={{
+                marginLeft: "auto",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {isLoading && <LoadingOutlined></LoadingOutlined>}
+            </div>
+          </Button>
+        </Badge>
 
-      <p>
-        {count} / {range[1] - range[0]}
-      </p>
+        <p>
+          {count} / {range[1] - range[0]}
+        </p>
 
-      <Styled.Pricetag>
-        £{player.now_cost / 10}
-        {!(player.now_cost % 10) ? ".0" : ""}m
-        <PlusCircleOutlined></PlusCircleOutlined>
-      </Styled.Pricetag>
+        <Styled.Pricetag>
+          £{player.now_cost / 10}
+          {!(player.now_cost % 10) ? ".0" : ""}m
+          <PlusCircleOutlined></PlusCircleOutlined>
+        </Styled.Pricetag>
 
-      <Switch
-        disabled={isLoading}
-        defaultChecked={false}
-        onChange={() => {
-          toggleActive(false);
-          toggleOpen(!open);
-        }}
-        onClick={() => {
-          toggleActive(false);
-          toggleOpen(!open);
-        }}
-        style={{
-          marginLeft: "auto",
-        }}
-      ></Switch>
-      {/* {player.news && (
+        <Switch
+          disabled={isLoading}
+          defaultChecked={false}
+          onChange={() => {
+            toggleActive(false);
+            toggleOpen(!open);
+          }}
+          onClick={() => {
+            toggleActive(false);
+            toggleOpen(!open);
+          }}
+          style={{
+            marginLeft: "auto",
+          }}
+        ></Switch>
+        {/* {player.news && (
         <ExclamationCircleOutlined
           onClick={() => {}}
           style={{
@@ -216,7 +240,8 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
           }}
         ></ExclamationCircleOutlined>
       )} */}
-    </Styled.SCard>
+      </Styled.SCard>
+    </>
   );
 };
 

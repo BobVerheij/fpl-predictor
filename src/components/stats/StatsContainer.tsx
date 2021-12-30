@@ -5,9 +5,15 @@ import * as Styled from "./StatsContainer.styled";
 import { useStore } from "../../stores/ZustandStore";
 
 import { Badge, Button, Drawer, Switch } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import {
+  CiCircleOutlined,
+  LoadingOutlined,
+  PlusCircleFilled,
+  PlusCircleOutlined,
+} from "@ant-design/icons";
 
 import { Difficulties } from "./Difficulties";
+import { CircleLoader } from "react-spinners";
 
 interface StatsContainerProps {
   element: {
@@ -165,6 +171,12 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
       <p>
         {count} / {range[1] - range[0]}
       </p>
+
+      <Styled.Pricetag>
+        £{player.now_cost / 10}
+        {!(player.now_cost % 10) ? ".0" : ""}m
+        <PlusCircleOutlined></PlusCircleOutlined>
+      </Styled.Pricetag>
 
       <Switch
         disabled={isLoading}

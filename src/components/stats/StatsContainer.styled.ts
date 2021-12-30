@@ -106,3 +106,17 @@ export const Stat = styled.p`
     background: grey;
   }
 `;
+
+export const Pricetag = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+  transform: rotateZ(0.01turn);
+  color: white;
+  padding: 0 0.4rem !important;
+  gap: 0.5rem;
+  border-radius: 0.2rem 1rem 1rem 0.2rem;
+  background-color: var(--primary);
+  overflow: visible;
+`;

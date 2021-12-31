@@ -30,11 +30,15 @@ export const RangeSelector = styled.div`
   }
 
   .ant-select {
+    min-width: 90px;
   }
 
   .ant-select-selector {
     background: var(--primary) !important;
+
     border: 2px solid var(--secondary) !important;
+    border-left: none !important;
+    border-right: none !important;
 
     color: white;
     padding: 0;
@@ -59,6 +63,7 @@ export const RangeSelector = styled.div`
   .ant-select:first-of-type > .ant-select-selector {
     border-radius: 1rem 0 0 1rem;
     border-right: 0 !important;
+    border-left: 2px solid var(--secondary) !important;
 
     > * {
       text-align: left;
@@ -67,6 +72,7 @@ export const RangeSelector = styled.div`
   .ant-select:last-of-type > .ant-select-selector {
     border-radius: 0 1rem 1rem 0;
     border-left: 0 !important;
+    border-right: 2px solid var(--secondary) !important;
 
     > * {
       text-align: right;

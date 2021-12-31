@@ -24,36 +24,56 @@ interface StatsContainerProps {
     count: number;
     difficulties: number[];
   };
-  range: number[];
 }
 
-const StatsContainer = ({ element, range }: StatsContainerProps) => {
-  const sort = useStore((state) => state.sort);
-  const { player, stat, count } = element;
-  const isLoading = useStore((state) => state.isLoading);
-  const [open, toggleOpen] = useState(false);
+const StatsContainer = ({ element }: StatsContainerProps) => {
   const [active, toggleActive] = useState(false);
+  const [open, toggleOpen] = useState(false);
+  const { player, stat } = element;
+  const isLoading = useStore((state) => state.isLoading);
   const liveDetails = useStore((state) => state.liveDetails);
+  const sort = useStore((state) => state.sort);
+  const span = useStore((state) => state.span);
 
-  const playedMatches = liveDetails
-    .map((details) => details.elements.find((el) => player.id === el.id))
-    .filter((pl) => pl?.stats?.minutes > 0);
+  const allMatches = liveDetails.map((details) =>
+    details.elements.find((el) => player.id === el.id)
+  );
 
-  const spanRange = range[1] - range[0];
+  const playedMatches = [...allMatches].filter((pl) => pl?.stats?.minutes > 0);
 
-  let spans = [];
-  for (let i = 0; i <= playedMatches.length - spanRange; i++) {
-    const span =
-      playedMatches
-        .slice(i, i + spanRange)
-        .reduce((acc, match) => acc + parseInt(match.stats[sort[0]]), 0) /
-      spanRange;
-    spans.push({
-      avg: span.toFixed(2),
-    });
+  const spanRanges = allMatches.map((match) => {
+    return {
+      weekly: match?.stats[sort[0]] || null,
+      avg: null,
+    };
+  });
+
+  for (let i = 0; i <= allMatches.length - span; i++) {
+    const spanData = [...allMatches]
+      .slice(i, i + span)
+      .filter((match) => match?.stats.minutes > 0);
+
+    const spanValue = [...spanData].reduce(
+      (acc, match) => acc + parseInt(match?.stats[sort[0]]),
+      0
+    );
+
+    spanRanges[Math.ceil(i + (span - 1) / 2)].avg = (
+      spanValue / spanData.length
+    ).toFixed(2);
   }
 
-  console.log("Spans", spans);
+  if (!spanRanges[0].avg) {
+    spanRanges[0].avg = [...spanRanges].find((range) => range.avg).avg;
+  }
+
+  if (!spanRanges[spanRanges.length - 1].avg) {
+    spanRanges[spanRanges.length - 1].avg = [...spanRanges]
+      .reverse()
+      .find((range) => range.avg).avg;
+  }
+
+  console.log(spanRanges);
 
   const photoUrl = `https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`;
 
@@ -127,7 +147,11 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
 
   return (
     <>
-      <Graph data={spans} playerName={player.web_name} photo={photoUrl}></Graph>
+      <Graph
+        data={spanRanges}
+        playerName={player.web_name}
+        photo={photoUrl}
+      ></Graph>
 
       <Styled.SCard
         active={open}
@@ -143,7 +167,11 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
         cover={Cover()}
       >
         <Badge
-          style={{ backgroundColor: "var(--secondary)", color: "black" }}
+          style={{
+            backgroundColor: "var(--secondary)",
+            color: "black",
+            fontWeight: 900,
+          }}
           count={stat.toFixed(2)}
         >
           <Button

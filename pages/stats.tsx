@@ -27,17 +27,20 @@ const StatsPage = () => {
   const positionFilter = useStore((state) => state.positionFilter);
   const sort = useStore((state) => state.sort);
   const setFixtures = useStore((state) => state.setFixtures);
+  const range = useStore((state) => state.range);
+  const setRange = useStore((state) => state.setRange);
+  const setSpan = useStore((state) => state.setSpan);
+  const span = useStore((state) => state.span);
 
   const [playerValues, setPlayerValues] = useState<
     { id: number; stat: number; count: number }[]
   >([]);
 
-  const [range, setRange] = useState([0, current]);
+  console.log(range[1] - span, range[1]);
 
   const updateValues = () => {
     let baseValues: IPLayerValues[] = [];
-
-    liveDetails?.slice(range[0], range[1]).map((details) => {
+    liveDetails?.slice(range[0] - span, range[1]).map((details) => {
       return details.elements.map((element) => {
         if (baseValues.find((values) => values.id === element.id)) {
           if (element.stats["minutes"]) {
@@ -73,7 +76,7 @@ const StatsPage = () => {
 
   useEffect(() => {
     updateValues();
-  }, [range, sort]);
+  }, [range, sort, span]);
 
   const bestPlayers: {
     player: Element;
@@ -89,7 +92,7 @@ const StatsPage = () => {
       return { player, stat, count: values.count };
     })
     .filter((element) => positionFilter.includes(element.player.element_type))
-    .filter((element) => element.count > 0.5 * (range[1] - range[0]))
+    .filter((element) => element.count > span / 2)
     .sort((a, b) => b.stat - a.stat)
     .map((element) => {
       const { player } = element;
@@ -119,23 +122,22 @@ const StatsPage = () => {
       const sum = element.difficulties.reduce((acc, diff) => acc + diff, 0);
       return sum / element.difficulties.length <= 3;
     })
-    .slice(0, 20);
+    .slice(0, 40);
 
   const rangeItems = Array.apply(null, Array(current)).map(function () {});
+
+  console.log(bestPlayers);
 
   return (
     <>
       <FilterBar></FilterBar>
       <SortBar></SortBar>
-
       <RangeSelector>
         <Select
-          style={{ minWidth: 100 }}
-          id="beginRangeSelet"
-          onChange={(value) => {
+          onChange={(value: number) => {
             setRange([value, range[1]]);
           }}
-          defaultValue={range[0] || 0}
+          defaultValue={0}
         >
           {rangeItems.slice(0, range[1]).map((_, index) => (
             <Select.Option value={index}>GW {index + 1}</Select.Option>
@@ -143,15 +145,29 @@ const StatsPage = () => {
         </Select>
 
         <Select
-          style={{ minWidth: 100 }}
-          id="endRangeSelect"
           onChange={(value) => {
+            setSpan(value);
+          }}
+          defaultValue={4}
+        >
+          <Select.Option value={1}>Weekly</Select.Option>
+          <Select.Option value={2}>Bi-weekly</Select.Option>
+          <Select.Option value={4}>Monthly</Select.Option>
+          <Select.Option value={8}>Bi-monthly</Select.Option>
+          <Select.Option value={Math.floor(range[1] / 2)}>
+            Half-Season
+          </Select.Option>
+          <Select.Option value={range[1] - 1}>Start-Now</Select.Option>
+          <Select.Option value={range[1]}>Full Season</Select.Option>
+        </Select>
+
+        <Select
+          onChange={(value: number) => {
             setRange([range[0], value]);
           }}
-          placeholder={"GW"}
-          defaultValue={rangeItems.length}
+          defaultValue={range[1]}
         >
-          {rangeItems.slice(range[0], 10000).map((_, index) => (
+          {rangeItems.slice(range[0], 40).map((_, index) => (
             <Select.Option value={index + range[0] + 1}>
               GW {index + 1 + range[0]}
             </Select.Option>
@@ -169,13 +185,7 @@ const StatsPage = () => {
         }}
       >
         {bestPlayers.map((element) => (
-          <React.Fragment key={element?.player?.web_name}>
-            <StatsContainer
-              key={uuid()}
-              element={element}
-              range={range}
-            ></StatsContainer>
-          </React.Fragment>
+          <StatsContainer key={uuid()} element={element}></StatsContainer>
         ))}
       </div>
     </>

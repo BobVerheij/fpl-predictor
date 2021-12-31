@@ -22,6 +22,7 @@ interface State {
   liveDetails: Live[];
   mainColor: string;
   positionFilter: number[];
+  range: number[];
   secondaryColor: string;
   setBootstrap: (input: NewBootstrap) => void;
   setCurrent: (input: number) => void;
@@ -32,10 +33,13 @@ interface State {
   setLiveDetails: (input: Live[]) => void;
   setMainColor: (input: string) => void;
   setPositionFilter: (input: number[]) => void;
+  setRange: (input: number[]) => void;
   setSecondaryColor: (input: string) => void;
   setSort: (input: string[]) => void;
+  setSpan: (input: number) => void;
   setTeams: (input: Team[]) => void;
   sort: string[];
+  span: number;
   teams: Team[];
 }
 
@@ -49,6 +53,7 @@ export const useStore = create<State>((set) => ({
   liveDetails: null,
   mainColor: "#37003c",
   positionFilter: [1, 2, 3, 4],
+  range: [],
   secondaryColor: "#03FF86",
   setBootstrap: (input) => set({ bootstrap: input }),
   setCurrent: (input) => set({ current: input }),
@@ -59,9 +64,12 @@ export const useStore = create<State>((set) => ({
   setLiveDetails: (input) => set({ liveDetails: input }),
   setMainColor: (input) => set({ mainColor: input }),
   setPositionFilter: (input) => set({ positionFilter: input }),
+  setRange: (input) => set({ range: input }),
   setSecondaryColor: (input) => set({ secondaryColor: input }),
   setSort: (input) => set({ sort: input }),
   setTeams: (input) => set({ teams: input }),
   sort: ["total_points"],
+  span: 4,
+  setSpan: (input) => set({ span: input }),
   teams: [],
 }));

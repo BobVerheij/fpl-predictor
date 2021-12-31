@@ -11,7 +11,6 @@ import {
   Tooltip,
   YAxis,
 } from "recharts";
-import { useStore } from "../../../stores/ZustandStore";
 
 import * as Styled from "./Graph.styled";
 
@@ -23,11 +22,6 @@ interface IGraph {
 
 const Graph = ({ data, playerName, photo }: IGraph) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const current = useStore((state) => state.current);
-
-  const rangeOK = data.length < current;
-
-  console.log(data.length, current, rangeOK);
 
   useEffect(() => {
     setIsLoading(true);
@@ -57,7 +51,7 @@ const Graph = ({ data, playerName, photo }: IGraph) => {
 
   return (
     <>
-      {data && rangeOK && (
+      {data && (
         <Styled.GraphContainer photo={photo}>
           {isLoading && <LoadingOutlined></LoadingOutlined>}
           {!isLoading && (

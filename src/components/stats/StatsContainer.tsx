@@ -15,7 +15,7 @@ import {
 import { Difficulties } from "./Difficulties";
 import { CircleLoader } from "react-spinners";
 import { reduce } from "lodash";
-import Graph from "./Graph";
+import Graph from "./graph/Graph";
 
 interface StatsContainerProps {
   element: {
@@ -55,14 +55,14 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
 
   console.log("Spans", spans);
 
+  const photoUrl = `https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`;
+
   const Cover = () => {
     return (
       <>
-        <Graph data={spans} playerName={player.web_name}></Graph>
-
         <Styled.StatsCard
           open={open}
-          photo={`https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`}
+          photo={photoUrl}
           active={active}
           className="site-drawer-render-in-current-wrapper"
         >
@@ -127,6 +127,8 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
 
   return (
     <>
+      <Graph data={spans} playerName={player.web_name} photo={photoUrl}></Graph>
+
       <Styled.SCard
         active={open}
         status={player?.chance_of_playing_next_round?.toString()}
@@ -192,15 +194,15 @@ const StatsContainer = ({ element, range }: StatsContainerProps) => {
           </Button>
         </Badge>
 
-        <p>
+        {/* <p>
           {count} / {range[1] - range[0]}
-        </p>
+        </p> */}
 
-        <Styled.Pricetag>
+        {/* <Styled.Pricetag>
           £{player.now_cost / 10}
           {!(player.now_cost % 10) ? ".0" : ""}m
           <PlusCircleOutlined></PlusCircleOutlined>
-        </Styled.Pricetag>
+        </Styled.Pricetag> */}
 
         <Switch
           disabled={isLoading}

@@ -5,12 +5,15 @@ import * as Styled from "./NavBar.styled";
 import WeekPicker from "./WeekPicker";
 import { useStore } from "../../stores/ZustandStore";
 import { Button, ConfigProvider } from "antd";
+import { useRouter } from "next/router";
 
 const NavBar = () => {
   const setMainColor = useStore((state) => state.setMainColor);
   const mainColor = useStore((state) => state.mainColor);
   const setSecondaryColor = useStore((state) => state.setSecondaryColor);
   const secondaryColor = useStore((state) => state.secondaryColor);
+
+  const router = useRouter();
 
   const liveDetails = useStore((state) => state.liveDetails);
 
@@ -26,13 +29,32 @@ const NavBar = () => {
   return (
     <Styled.NavBar>
       <Styled.NavContainer>
-        <Link href="/">
-          <h3>FPL Predictor</h3>
-        </Link>
+        <Button
+          onClick={() => {
+            router.push("/");
+          }}
+          shape="round"
+        >
+          <img
+            style={{ width: 60, height: "auto" }}
+            src="images/PRTRT.svg"
+            alt=""
+          />
+        </Button>
+
+        <Button
+          onClick={() => {
+            router.push("/stats");
+          }}
+          shape="round"
+        >
+          <p style={{ fontWeight: 900 }}>Stats</p>
+        </Button>
+
+        {/* <div
+          style={{ width: 100, height: 50, mask: "url(images/PRTRT.svg)", backgroundColor: "white"}}
+        ></div> */}
         <WeekPicker />
-        <Link href="/stats">
-          <a> Stats </a>
-        </Link>
         <Styled.ColorPickerWrapper>
           <Styled.ColorPicker
             type="color"

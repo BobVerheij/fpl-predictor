@@ -41,13 +41,13 @@ export const NavContainer = styled.div`
 export const ColorPickerWrapper = styled.div`
   display: flex;
   flex-flow: column wrap;
-  gap: 4px;
+  gap: 0.25rem;
 `;
 
 export const ColorPicker = styled.input`
-  width: 48px;
-  height: 16px;
-  border-radius: 24px;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 1rem;
   padding: 0;
   border: none;
   outline: none;
@@ -58,7 +58,7 @@ export const ColorPicker = styled.input`
   }
   ::-webkit-color-swatch {
     border: 1px solid white;
-    border-radius: 24px;
+    border-radius: 1rem;
     outline: none;
   }
 `;

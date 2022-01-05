@@ -122,6 +122,7 @@ const StatsPage = () => {
       const sum = element.difficulties.reduce((acc, diff) => acc + diff, 0);
       return sum / element.difficulties.length <= 3;
     })
+    // .filter((element) => element.player.team_code === 21)
     .slice(0, 40);
 
   const rangeItems = Array.apply(null, Array(current)).map(function () {});

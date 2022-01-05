@@ -44,9 +44,10 @@ const StatsContainer = ({ element }: StatsContainerProps) => {
   const spanRanges = allMatches.map((match) => {
     return {
       weekly: match?.stats[sort[0]] || null,
-      avg: null,
     };
   });
+
+  let avgRanges = [];
 
   for (let i = 0; i <= allMatches.length - span; i++) {
     const spanData = [...allMatches]
@@ -58,25 +59,15 @@ const StatsContainer = ({ element }: StatsContainerProps) => {
       0
     );
 
-    spanRanges[Math.ceil(i + (span - 1) / 2)].avg = (
-      spanValue / spanData.length
-    ).toFixed(2);
+    avgRanges.push({ avg: (spanValue / spanData.length).toFixed(2) });
+    // spanRanges[Math.ceil(i + (span - 1) / 2)].avg = (
+    //   spanValue / spanData.length
+    // ).toFixed(2);
   }
-
-  if (!spanRanges[0].avg) {
-    spanRanges[0].avg = [...spanRanges].find((range) => range.avg).avg;
-  }
-
-  if (!spanRanges[spanRanges.length - 1].avg) {
-    spanRanges[spanRanges.length - 1].avg = [...spanRanges]
-      .reverse()
-      .find((range) => range.avg).avg;
-  }
-
-  console.log(spanRanges);
 
   const photoUrl = `https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`;
 
+  console.log(avgRanges);
   const Cover = () => {
     return (
       <>
@@ -146,12 +137,8 @@ const StatsContainer = ({ element }: StatsContainerProps) => {
   };
 
   return (
-    <>
-      <Graph
-        data={spanRanges}
-        playerName={player.web_name}
-        photo={photoUrl}
-      ></Graph>
+    <Styled.Container>
+      <Graph avgData={avgRanges} data={spanRanges} photo={photoUrl}></Graph>
 
       <Styled.SCard
         active={open}
@@ -271,7 +258,7 @@ const StatsContainer = ({ element }: StatsContainerProps) => {
         ></ExclamationCircleOutlined>
       )} */}
       </Styled.SCard>
-    </>
+    </Styled.Container>
   );
 };
 

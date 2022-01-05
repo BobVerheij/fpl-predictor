@@ -1,13 +1,11 @@
-import styled from "styled-components";
+import { over } from "lodash";
+import styled, { css } from "styled-components";
 
-export const GraphContainer = styled.div<{ photo: string }>`
+export const GraphContainer = styled.div<{ photo?: string; overlay?: boolean }>`
   position: relative;
   align-items: center;
   background-color: white;
-  background-image: url(${({ photo }) => photo ?? ""});
-  background-position: 5% 110%;
-  background-repeat: no-repeat;
-  background-size: auto 90%;
+
   border-radius: 0.5rem;
   display: flex;
   flex-flow: row nowrap;
@@ -18,6 +16,28 @@ export const GraphContainer = styled.div<{ photo: string }>`
   overflow: visible;
   box-shadow: inset 0 -0.2rem 0.5rem 0 rgba(0, 0, 0, 0.4);
   border: 2px solid white;
+
+  ${(props) =>
+    props.overlay &&
+    css`
+      pointer-events: none;
+      background-color: transparent;
+      position: absolute;
+      top: 0;
+      box-shadow: none;
+      path {
+        mix-blend-mode: multiply;
+      }
+    `}
+
+  ${(props) =>
+    props.photo &&
+    css`
+      background-image: url(${props.photo});
+      background-position: 5% 110%;
+      background-repeat: no-repeat;
+      background-size: auto 90%;
+    `}
 
   ::after,
   ::before {

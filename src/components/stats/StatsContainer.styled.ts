@@ -1,6 +1,15 @@
 import { Card } from "antd";
 import styled from "styled-components";
 
+export const Container = styled.div`
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  justify: center;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
 export const SCard = styled(Card)<{ status?: string; active?: boolean }>`
   cursor: auto;
   pointer-events: all;

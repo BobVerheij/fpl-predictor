@@ -17,6 +17,7 @@ export const SettingsDrawer = ({ handleClose, isOpen }: ISettingsDrawer) => {
     display: "flex",
     flexFlow: "column nowrap",
     justifyContent: "flex-start",
+    alignItems: "center",
     gap: "0.5rem",
   };
   const maskStyle = {

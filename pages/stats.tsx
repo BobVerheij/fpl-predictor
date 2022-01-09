@@ -123,7 +123,7 @@ const StatsPage = () => {
       return sum / element.difficulties.length <= 3;
     })
     // .filter((element) => element.player.team_code === 21)
-    .slice(0, 40);
+    .slice(0, 15);
 
   console.log(bestPlayers);
 

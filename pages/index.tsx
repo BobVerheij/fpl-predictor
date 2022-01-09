@@ -31,7 +31,7 @@ const GameWeekPage = () => {
     )
   );
 
-  const limitedLiveElements = filteredLiveElements?.slice(0, 20);
+  const limitedLiveElements = filteredLiveElements?.slice(0, 15);
 
   const limitedPlayers = limitedLiveElements?.map((lim) =>
     bootstrap?.elements?.find((player) => player.id === lim.id)

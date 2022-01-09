@@ -17,14 +17,20 @@ import { LiveElement } from "fpl-api";
 
 interface IPlayerCard {
   weekDetails: LiveElement;
+  initOpen: boolean;
   player: NewElement;
   isLoading?: boolean;
 }
 
-const PlayerCard = ({ weekDetails, player, isLoading }: IPlayerCard) => {
+const PlayerCard = ({
+  weekDetails,
+  initOpen,
+  player,
+  isLoading,
+}: IPlayerCard) => {
   const [active, toggleActive] = useState<boolean>(false);
   const [currentLiveDetails, setCurrentLiveDetails] = useState(weekDetails);
-  const [open, toggleOpen] = useState<boolean>(false);
+  const [open, toggleOpen] = useState<boolean>(initOpen);
   const current = useStore((state) => state.current);
   const ictList = ["creativity", "influence", "threat"];
   const sort = useStore((state) => state.sort);
@@ -248,7 +254,7 @@ const PlayerCard = ({ weekDetails, player, isLoading }: IPlayerCard) => {
       )}
       <Switch
         disabled={isLoading}
-        defaultChecked={false}
+        defaultChecked={initOpen ? true : false}
         onChange={() => {
           toggleActive(false);
           toggleOpen(!open);

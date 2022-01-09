@@ -3,15 +3,15 @@ import styled from "styled-components";
 export const NavBar = styled.nav`
   width: 100vw;
   background-color: var(--primary);
-
-  align-self: center;
-  margin-bottom: 40px;
   box-shadow: 0 0 5em rgba(0, 0, 0, 0.2);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100000;
+  display: flex;
+
+  height: var(--header-height);
 
   h3 {
     color: white;
@@ -25,17 +25,13 @@ export const NavBar = styled.nav`
 `;
 
 export const NavContainer = styled.div`
-  margin: 0 auto;
-  width: 90vw;
-  max-width: 400px;
+  width: 100%;
   display: flex;
   align-items: center;
   flex-flow: rows;
-  justify-content: center;
-  gap: 12px;
-  :first-child {
-    margin-right: auto;
-  }
+  justify-content: flex-start;
+  gap: 0.5rem;
+  padding: 0 1.5rem;
 `;
 
 export const ColorPickerWrapper = styled.div`

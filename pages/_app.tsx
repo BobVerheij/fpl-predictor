@@ -98,9 +98,11 @@ const App = ({ Component, pageProps }: AppProps) => {
         content="width=device-width, initial-scale=1, maximum-scale=1"
       ></meta>
       <GlobalStyle mainColor={mainColor} secondaryColor={secondaryColor} />
+      {/* <PageContainer> */}
       <NavBar />
       {isLoading && <LoadingAnimation />}
       {!isLoading && <Component {...pageProps} />}
+      {/* </PageContainer> */}
     </DndProvider>
   );
 };

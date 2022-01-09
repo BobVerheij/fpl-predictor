@@ -7,6 +7,7 @@ import { useStore } from "../../stores/ZustandStore";
 import { Badge, Button, Drawer, Switch } from "antd";
 import {
   CiCircleOutlined,
+  LineChartOutlined,
   LoadingOutlined,
   PlusCircleFilled,
   PlusCircleOutlined,
@@ -24,9 +25,10 @@ interface StatsContainerProps {
     count: number;
     difficulties: number[];
   };
+  initOpen: boolean;
 }
 
-const StatsContainer = ({ element }: StatsContainerProps) => {
+const StatsContainer = ({ element, initOpen }: StatsContainerProps) => {
   const [active, toggleActive] = useState(false);
   const [open, toggleOpen] = useState(false);
   const { player, stat } = element;
@@ -34,6 +36,7 @@ const StatsContainer = ({ element }: StatsContainerProps) => {
   const liveDetails = useStore((state) => state.liveDetails);
   const sort = useStore((state) => state.sort);
   const span = useStore((state) => state.span);
+  const [chartActive, setChartActive] = useState(initOpen);
 
   const allMatches = liveDetails.map((details) =>
     details.elements.find((el) => player.id === el.id)
@@ -67,7 +70,10 @@ const StatsContainer = ({ element }: StatsContainerProps) => {
 
   const photoUrl = `https://resources.premierleague.com/premierleague/photos/players/110x140/p${player?.code}.png`;
 
-  console.log(avgRanges);
+  const toggleChart = () => {
+    setChartActive(!chartActive);
+  };
+
   const Cover = () => {
     return (
       <>
@@ -138,7 +144,9 @@ const StatsContainer = ({ element }: StatsContainerProps) => {
 
   return (
     <Styled.Container>
-      <Graph avgData={avgRanges} data={spanRanges} photo={photoUrl}></Graph>
+      {chartActive && (
+        <Graph avgData={avgRanges} data={spanRanges} photo={photoUrl}></Graph>
+      )}
 
       <Styled.SCard
         active={open}
@@ -219,6 +227,14 @@ const StatsContainer = ({ element }: StatsContainerProps) => {
           <PlusCircleOutlined></PlusCircleOutlined>
         </Styled.Pricetag> */}
 
+        <Button
+          style={{ marginLeft: "auto" }}
+          onClick={toggleChart}
+          shape="round"
+        >
+          <LineChartOutlined />
+        </Button>
+
         <Switch
           disabled={isLoading}
           defaultChecked={false}
@@ -229,9 +245,6 @@ const StatsContainer = ({ element }: StatsContainerProps) => {
           onClick={() => {
             toggleActive(false);
             toggleOpen(!open);
-          }}
-          style={{
-            marginLeft: "auto",
           }}
         ></Switch>
         {/* {player.news && (

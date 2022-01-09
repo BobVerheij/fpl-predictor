@@ -37,12 +37,14 @@ export const NavContainer = styled.div`
 export const ColorPickerWrapper = styled.div`
   display: flex;
   flex-flow: column wrap;
-  gap: 0.25rem;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
 `;
 
 export const ColorPicker = styled.input`
-  width: 1rem;
-  height: 1rem;
+  width: 33%;
+  height: 1.5rem;
   border-radius: 1rem;
   padding: 0;
   border: none;

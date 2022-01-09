@@ -6,7 +6,8 @@ export const FilterBar = styled.div`
   justify-content: flex-start;
   align-items: stretch;
   height: auto;
-  width: 90%;
+  padding: 0 1rem;
+  width: 100%;
 `;
 
 export const FilterName = styled.p`

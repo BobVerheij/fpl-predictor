@@ -50,13 +50,11 @@ const GameWeekPage = () => {
 
   return (
     <>
-      <FilterBar></FilterBar>
-      <SortBar></SortBar>
-
       <div
         style={{
           gap: "1rem",
           margin: "0 auto",
+          marginTop: "var(--header-height)",
           maxWidth: "400px",
           width: "90vw",
           display: "flex",
@@ -66,6 +64,7 @@ const GameWeekPage = () => {
         {limitedPlayers
           ? limitedPlayers?.map((player, index) => (
               <PlayerCard
+                initOpen={index === 0}
                 weekDetails={limitedLiveElements[index]}
                 key={player.id}
                 player={bootstrap.elements.find(

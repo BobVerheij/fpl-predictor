@@ -15,6 +15,8 @@ const GlobalStyle = createGlobalStyle<{
 --secondary60: ${(props) => `${props.secondaryColor}60`};
 --secondary40: ${(props) => `${props.secondaryColor}40`};
 --secondary20: ${(props) => `${props.secondaryColor}20`};
+
+--header-height: 4rem;
 }
 
 * {

@@ -6,14 +6,7 @@ export const FilterBar = styled.div`
   justify-content: flex-start;
   align-items: stretch;
   height: auto;
-  margin: 4px auto;
-
-  width: 90vw;
-  max-width: 400px;
-
-  :first-of-type {
-    margin-top: 50px;
-  }
+  width: 90%;
 `;
 
 export const FilterName = styled.p`

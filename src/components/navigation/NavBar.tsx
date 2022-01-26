@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { ColorPicker } from "./colorpicker/ColorPicker";
 import { SettingsDrawer } from "./filter-drawer/SettingsDrawer";
 import { MenuFoldOutlined, MenuOutlined } from "@ant-design/icons";
+import { SearchBar } from "../search/SearchBar";
 
 const NavBar = () => {
   const mainColor = useStore((state) => state.mainColor);
@@ -55,6 +56,7 @@ const NavBar = () => {
         >
           <p style={{ fontWeight: 900 }}>Stats</p>
         </Button>
+        <SearchBar />
         <Button
           style={{ marginLeft: "auto" }}
           onClick={handleClose}

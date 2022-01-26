@@ -28,6 +28,7 @@ const StatsPage = () => {
   const sort = useStore((state) => state.sort);
   const setFixtures = useStore((state) => state.setFixtures);
   const range = useStore((state) => state.range);
+  const search = useStore((state) => state.search);
   const setRange = useStore((state) => state.setRange);
   const setSpan = useStore((state) => state.setSpan);
   const span = useStore((state) => state.span);
@@ -35,8 +36,6 @@ const StatsPage = () => {
   const [playerValues, setPlayerValues] = useState<
     { id: number; stat: number; count: number }[]
   >([]);
-
-  console.log(range[1] - span, range[1]);
 
   const updateValues = () => {
     let baseValues: IPLayerValues[] = [];
@@ -91,6 +90,22 @@ const StatsPage = () => {
       const stat = values.stat / values.count;
       return { player, stat, count: values.count };
     })
+    .filter((element) => {
+      const player = bootstrap?.elements?.find(
+        (player) => element.player.id === player.id
+      );
+      const team = bootstrap.teams.find(
+        (team) => team.id === player?.team
+      ).name;
+      return (
+        player.web_name.toLowerCase().includes(search.toLowerCase().trim()) ||
+        player.first_name.toLowerCase().includes(search.toLowerCase().trim()) ||
+        player.second_name
+          .toLowerCase()
+          .includes(search.toLowerCase().trim()) ||
+        team.toLowerCase().includes(search.toLowerCase().trim())
+      );
+    })
     .filter((element) => positionFilter.includes(element.player.element_type))
     .filter((element) => element.count > span / 2)
     .sort((a, b) => b.stat - a.stat)
@@ -123,9 +138,7 @@ const StatsPage = () => {
       return sum / element.difficulties.length <= 3;
     })
     // .filter((element) => element.player.team_code === 21)
-    .slice(0, 15);
-
-  console.log(bestPlayers);
+    .slice(0, 40);
 
   return (
     <>

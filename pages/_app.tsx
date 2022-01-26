@@ -18,6 +18,8 @@ import React, { useEffect, useState } from "react";
 import type { AppProps } from "next/app";
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const [isStylingCorrect, setIsStylingCorrect] = useState(false);
+
   const bootstrap = useStore((state) => state.bootstrap);
   const setCurrent = useStore((state) => state.setCurrent);
   const isLoading = useStore((state) => state.isLoading);
@@ -28,6 +30,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   const setIsLoading = useStore((state) => state.setIsLoading);
   const setLiveDetails = useStore((state) => state.setLiveDetails);
   const setMainColor = useStore((state) => state.setMainColor);
+  const setRange = useStore((state) => state.setRange);
   const setSecondaryColor = useStore((state) => state.setSecondaryColor);
   const setFixtures = useStore((state) => state.setFixtures);
 
@@ -56,9 +59,8 @@ const App = ({ Component, pageProps }: AppProps) => {
   };
 
   useEffect(() => {
-    if (bootstrap?.events?.[liveDetails.length].finished) {
-      setCurrent(liveDetails?.length);
-    }
+    setCurrent(liveDetails?.length);
+    setRange([liveDetails?.length - 1, liveDetails?.length - 1]);
   }, [liveDetails]);
 
   useEffect(() => {
@@ -91,6 +93,15 @@ const App = ({ Component, pageProps }: AppProps) => {
     })();
   }, [bootstrap]);
 
+  useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector("#jss-server-side");
+    if (jssStyles) {
+      jssStyles.parentElement!.removeChild(jssStyles);
+    }
+    setIsStylingCorrect(true);
+  });
+
   return (
     <DndProvider backend={HTML5Backend}>
       <meta
@@ -98,11 +109,14 @@ const App = ({ Component, pageProps }: AppProps) => {
         content="width=device-width, initial-scale=1, maximum-scale=1"
       ></meta>
       <GlobalStyle mainColor={mainColor} secondaryColor={secondaryColor} />
-      {/* <PageContainer> */}
-      <NavBar />
-      {isLoading && <LoadingAnimation />}
-      {!isLoading && <Component {...pageProps} />}
-      {/* </PageContainer> */}
+
+      {isStylingCorrect && (
+        <>
+          <NavBar />
+          {isLoading && <LoadingAnimation />}
+          {!isLoading && <Component {...pageProps} />}
+        </>
+      )}
     </DndProvider>
   );
 };

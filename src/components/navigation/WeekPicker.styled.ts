@@ -12,6 +12,10 @@ export const WeekPicker = styled.select`
   border: 2px solid var(--secondary);
   border-radius: 100px;
   height: 2rem;
-  padding: 0 0.5rem;
+  padding: 0 1rem;
   outline: 0;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 `;

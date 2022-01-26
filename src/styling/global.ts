@@ -19,6 +19,11 @@ const GlobalStyle = createGlobalStyle<{
 --header-height: 4rem;
 }
 
+@font-face {
+	font-family: "Nekolina";
+	src: local("Nekolina"), url("/fonts/Nekolina.ttf"), format('ttf')
+}
+
 * {
 	box-sizing: border-box;
 	font-family: Arial, Helvetica, sans-serif;

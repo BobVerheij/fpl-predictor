@@ -1,21 +1,14 @@
 import React, { useState } from "react";
 import { NewElement } from "../../types/Types";
 import * as Styled from "./StatsContainer.styled";
+import * as PlayerCard from "../playercard/PlayerCard.styled";
 
 import { useStore } from "../../stores/ZustandStore";
 
 import { Badge, Button, Drawer, Switch } from "antd";
-import {
-  CiCircleOutlined,
-  LineChartOutlined,
-  LoadingOutlined,
-  PlusCircleFilled,
-  PlusCircleOutlined,
-} from "@ant-design/icons";
+import { LineChartOutlined, LoadingOutlined } from "@ant-design/icons";
 
 import { Difficulties } from "./Difficulties";
-import { CircleLoader } from "react-spinners";
-import { reduce } from "lodash";
 import Graph from "./graph/Graph";
 
 interface StatsContainerProps {
@@ -84,6 +77,11 @@ const StatsContainer = ({ element, initOpen }: StatsContainerProps) => {
           className="site-drawer-render-in-current-wrapper"
         >
           <Button onClick={() => toggleActive(!active)}> - - - </Button>
+          <PlayerCard.PlayerBasics>
+            <h1>
+              {player?.first_name} <b>{player?.second_name}</b>
+            </h1>
+          </PlayerCard.PlayerBasics>
           <Difficulties values={element.difficulties} />
           <Drawer
             keyboard
@@ -109,8 +107,8 @@ const StatsContainer = ({ element, initOpen }: StatsContainerProps) => {
               background: "none !important",
             }}
           >
-            {liveDetails?.map((live) => (
-              <>
+            {liveDetails?.map((live, index) => (
+              <React.Fragment key={index}>
                 <Styled.Stat>
                   {
                     live?.elements?.find((el) => player?.id === el.id)?.stats
@@ -134,7 +132,7 @@ const StatsContainer = ({ element, initOpen }: StatsContainerProps) => {
                 <Styled.Stat>test</Styled.Stat>
                 <Styled.Stat>test</Styled.Stat>
                 <Styled.Stat>test</Styled.Stat>
-              </>
+              </React.Fragment>
             ))}
           </Drawer>
         </Styled.StatsCard>
@@ -149,7 +147,7 @@ const StatsContainer = ({ element, initOpen }: StatsContainerProps) => {
       )}
 
       <Styled.SCard
-        active={open}
+        $activecheck={open}
         status={player?.chance_of_playing_next_round?.toString()}
         hoverable
         bodyStyle={{

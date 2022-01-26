@@ -10,7 +10,7 @@ export const Container = styled.div`
   gap: 0.5rem;
 `;
 
-export const SCard = styled(Card)<{ status?: string; active?: boolean }>`
+export const SCard = styled(Card)<{ status?: string; $activecheck?: boolean }>`
   cursor: auto;
   pointer-events: all;
   width: 90vw;
@@ -25,8 +25,8 @@ export const SCard = styled(Card)<{ status?: string; active?: boolean }>`
       : status === "75"
       ? "yellow"
       : "white"} !important;
-  box-shadow: inset 0 0 ${({ active }) => (active ? "1rem" : "0")}
-    ${({ active }) => (active ? "0.3rem" : "0")}
+  box-shadow: inset 0 0 ${({ $activecheck }) => ($activecheck ? "1rem" : "0")}
+    ${({ $activecheck }) => ($activecheck ? "0.3rem" : "0")}
     ${({ status }) =>
       status === "0"
         ? "red"

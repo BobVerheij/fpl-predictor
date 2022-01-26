@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
-export const RangeSelector = styled.div`
+export const RangeSelectorContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 60%;
 
   margin: 2rem auto 1rem auto;
 
@@ -12,7 +13,7 @@ export const RangeSelector = styled.div`
   overflow: visible;
 
   ::before {
-    content: "Gameweek Range";
+    content: "Stats Range";
     position: absolute;
     text-align: center;
     padding: 1rem;
@@ -23,17 +24,14 @@ export const RangeSelector = styled.div`
     font-size: 0.66rem;
     top: -75%;
     border-radius: 1rem 1rem 0 0;
+    z-index: 0;
   }
 
-  .ant-select-arrow {
-    display: none;
+  select {
+    width: 100%;
   }
 
-  .ant-select {
-    min-width: 90px;
-  }
-
-  .ant-select-selector {
+  select {
     background: var(--primary) !important;
 
     border: 2px solid var(--secondary) !important;
@@ -41,17 +39,8 @@ export const RangeSelector = styled.div`
     border-right: none !important;
 
     color: white;
-    padding: 0;
-    outline: 0;
 
     box-shadow: none !important;
-
-    * {
-      padding: 0 0.5rem !important;
-      text-align: left;
-      font-weight: 900;
-      border: 0 !important;
-    }
 
     :active,
     :focus,
@@ -60,7 +49,7 @@ export const RangeSelector = styled.div`
     }
   }
 
-  .ant-select:first-of-type > .ant-select-selector {
+  select:first-of-type {
     border-radius: 1rem 0 0 1rem;
     border-right: 0 !important;
     border-left: 2px solid var(--secondary) !important;
@@ -69,7 +58,7 @@ export const RangeSelector = styled.div`
       text-align: left;
     }
   }
-  .ant-select:last-of-type > .ant-select-selector {
+  select:last-of-type {
     border-radius: 0 1rem 1rem 0;
     border-left: 0 !important;
     border-right: 2px solid var(--secondary) !important;
@@ -78,4 +67,16 @@ export const RangeSelector = styled.div`
       text-align: right;
     }
   }
+`;
+
+export const RangeSelector = styled.select`
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  z-index: 1;
+  text-align: center;
+  height: 2rem;
+  padding: 0 1rem;
+  font-weight: 900;
+  outline: none;
 `;

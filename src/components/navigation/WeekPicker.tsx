@@ -7,12 +7,7 @@ const WeekPicker = () => {
   const bootstrap = useStore((state) => state.bootstrap);
   const current = useStore((state) => state.current);
   const isLoading = useStore((state) => state.isLoading);
-  const latestGameweek = useStore((state) => state.latestGameweek);
   const setCurrent = useStore((state) => state.setCurrent);
-
-  useEffect(() => {
-    if (latestGameweek) setCurrent(latestGameweek);
-  }, [latestGameweek]);
 
   const gameWeekChange = async (event) => {
     setCurrent(parseInt(event.target.value));

@@ -8,6 +8,7 @@ import { element } from "prop-types";
 
 const GameWeekPage = () => {
   const [, setSortStats] = useState<string[]>([, "total_points"]);
+  const search = useStore((state) => state.search);
   const bootstrap = useStore((state) => state.bootstrap);
   const current = useStore((state) => state.current);
   const isLoading = useStore((state) => state.isLoading);
@@ -24,14 +25,31 @@ const GameWeekPage = () => {
     (a, b) => b.stats[sort[0]] - a.stats[sort[0]]
   );
 
-  const filteredLiveElements = sortedLiveElements?.filter((element) =>
-    positionFilter.includes(
-      bootstrap?.elements?.find((player) => player.id === element.id)
-        .element_type
-    )
-  );
+  const filteredLiveElements = sortedLiveElements
+    ?.filter((element) => {
+      const player = bootstrap?.elements?.find(
+        (player) => element.id === player.id
+      );
+      const team = bootstrap.teams.find(
+        (team) => team.id === player?.team
+      ).name;
+      return (
+        player.web_name.toLowerCase().includes(search.toLowerCase().trim()) ||
+        player.first_name.toLowerCase().includes(search.toLowerCase().trim()) ||
+        player.second_name
+          .toLowerCase()
+          .includes(search.toLowerCase().trim()) ||
+        team.toLowerCase().includes(search.toLowerCase().trim())
+      );
+    })
+    .filter((element) =>
+      positionFilter.includes(
+        bootstrap?.elements?.find((player) => player.id === element.id)
+          .element_type
+      )
+    );
 
-  const limitedLiveElements = filteredLiveElements?.slice(0, 15);
+  const limitedLiveElements = filteredLiveElements?.slice(0, 20);
 
   const limitedPlayers = limitedLiveElements?.map((lim) =>
     bootstrap?.elements?.find((player) => player.id === lim.id)

@@ -23,6 +23,7 @@ interface State {
   mainColor: string;
   positionFilter: number[];
   range: number[];
+  search: string;
   secondaryColor: string;
   setBootstrap: (input: NewBootstrap) => void;
   setCurrent: (input: number) => void;
@@ -34,6 +35,7 @@ interface State {
   setMainColor: (input: string) => void;
   setPositionFilter: (input: number[]) => void;
   setRange: (input: number[]) => void;
+  setSearch: (input: string) => void;
   setSecondaryColor: (input: string) => void;
   setSort: (input: string[]) => void;
   setSpan: (input: number) => void;
@@ -54,6 +56,7 @@ export const useStore = create<State>((set) => ({
   mainColor: "#37003c",
   positionFilter: [1, 2, 3, 4],
   range: [],
+  search: "",
   secondaryColor: "#03FF86",
   setBootstrap: (input) => set({ bootstrap: input }),
   setCurrent: (input) => set({ current: input }),
@@ -65,6 +68,7 @@ export const useStore = create<State>((set) => ({
   setMainColor: (input) => set({ mainColor: input }),
   setPositionFilter: (input) => set({ positionFilter: input }),
   setRange: (input) => set({ range: input }),
+  setSearch: (input) => set({ search: input }),
   setSecondaryColor: (input) => set({ secondaryColor: input }),
   setSort: (input) => set({ sort: input }),
   setTeams: (input) => set({ teams: input }),

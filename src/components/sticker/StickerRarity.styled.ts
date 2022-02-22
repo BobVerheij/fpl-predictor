@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { css } from "styled-components";
 import { StickerWrapper } from "./Sticker.styled";
 
-const tString = css`
+const tString = css<{ rotation }>`
   transform: ${({ rotation }) =>
       !!rotation
         ? `rotate3d(${rotation.x}, ${rotation.y}, 0, 10deg)`
